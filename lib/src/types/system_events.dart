@@ -1,0 +1,1 @@
+enum SystemEvents { REQUEST, RESPONSE }
