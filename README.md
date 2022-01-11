@@ -29,8 +29,8 @@ Here's what should be done to build it for release:
 2. Change bundle id from com.backendless.native_app_shell to one that would match your identity.
 3. For iOS, create a team at https://developer.apple.com
 4. For Android, create a team at https://play.google.com/console/developers.
-5. Add certificates for push notifications:
-   5.1. For Android - add google-services.json to the android/app directory 
+5. Add certificates for push notifications:                                                 
+   5.1. For Android - add google-services.json to the android/app directory                          
    5.2. For iOS, create a profile and PRODUCTION certificate in your Apple Developer account and add to xCode.
 6. Add a launch screen for iOS in xCode in Runner > Runner > LaunchScreen (the source file is in Runner > Runner > Assets)
 7. Add a launch screen for Android (android > app  src > main > res)
