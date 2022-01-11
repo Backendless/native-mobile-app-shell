@@ -1,38 +1,39 @@
 import 'dart:convert';
 
 class BridgeManager {
-  static Future<String> processFunc(Function() func, Map data) async {
-    var result;
+  static Future<String?> processFunc(Function() func, Map data) async {
     try {
-      func().call().then((value) {
-        result = buildResponse(
-          id: data['id']!,
-          response: value,
-        );
-      }, onError: (error) {
-        result = buildResponse(
-          id: data['id']!,
-          error: data['error'] != null ? data['error'] : error,
-        );
-      });
+      await func().call();
+      return buildResponse(
+        id: data['payload']['id']!,
+        type: data['payload']['type'],
+        response: 'SUCCESSFUL',
+      );
     } catch (ex) {
-      throw new Exception(ex);
+      return buildResponse(
+        id: data['payload']['id']!,
+        type: data['payload']['type'],
+        error: data['payload']['error'] != null
+            ? data['payload']['error']
+            : ex.toString(),
+      );
     }
-    await Future.delayed(Duration(seconds: 10));
-    return result;
   }
 
   static String buildResponse(
-      {required String id, dynamic response, String? error}) {
+      {required String id,
+      required String type,
+      dynamic response,
+      String? error}) {
     Map result = {
       'event': 'RESPONSE',
-      'payload': {'type': 'registerDevice', 'id': id, 'data': {}}
+      'payload': {'type': type, 'id': id, 'data': {}}
     };
 
     if (response != null)
-      result['payload']['data']['result'] = json.encode(response);
+      result['payload']['data']['result'] = response;
     else
-      result['payload']['data']['error'] = json.encode(error);
+      result['payload']['data']['error'] = error;
 
     try {
       return json.encode(result);

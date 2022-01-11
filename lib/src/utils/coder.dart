@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 
 class Coder {
   static String decodeEnum(SystemEvents se) {
-    return describeEnum(se).toLowerCase().replaceAll('_', ' ');
+    return se.systemEvent;
   }
 
   static Future<dynamic> readJson({required String path}) async {

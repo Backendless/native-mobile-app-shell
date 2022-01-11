@@ -28,20 +28,21 @@ class Bridge {
                 case SystemEvents.REQUEST:
                   if (_isRegistered) return;
                   result =
-                      await BridgeManager.processFunc(() => funcToRun, data);
-                  _isRegistered = true;
+                      (await BridgeManager.processFunc(() => funcToRun, data))!;
+                  if (!result.contains('error')) _isRegistered = true;
                   break;
                 default:
-                  result =
-                      await BridgeManager.processFunc(() => funcToRun, data);
+                  throw Exception('Not supported operation');
               }
             } else
               result = BridgeManager.buildResponse(
-                  id: data['id']!, response: 'Processed');
+                  id: data['id']!,
+                  type: data['payload']['type'],
+                  response: 'Processed');
           } catch (ex) {
             throw new Exception(ex);
           }
-          replyProxy.postMessage(result);
+          if (result.isNotEmpty) replyProxy.postMessage(result);
         }));
   }
 

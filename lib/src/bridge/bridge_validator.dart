@@ -6,7 +6,9 @@ class BridgeValidator {
     var data = SystemEvents.values;
 
     for (SystemEvents ev in data) {
-      if (eventType == Coder.decodeEnum(ev)) return ev;
+      if (eventType == Coder.decodeEnum(ev)) {
+        return ev;
+      }
     }
 
     return null;
