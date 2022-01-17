@@ -23,18 +23,20 @@ You can find out how to do this [here](https://flutter.dev/docs/cookbook/design/
 After that, your application will be ready to use.
 
 ## Build for Release
-1. Change the app name as you would like to have it in the app stores.
-2. Change bundle id from `com.backendless.native_app_shell` to one that would match your app/corporate identity.
-3. For iOS, create a team at https://developer.apple.com
-4. For Android, create a team at https://play.google.com/console/developers.
-5. Add certificates for push notifications:                                                 
+1. Change the app name as you would like to have it in the app stores. This is done in the [app manifest for Android](https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/src/main/AndroidManifest.xml#L4) and xCode for iOS.
+2. Change applicationId and package name for Android.
+   https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/build.gradle#L38
+   https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/src/main/AndroidManifest.xml#L2
+4. For iOS, create a team at https://developer.apple.com
+5. For Android, create a team at https://play.google.com/console/developers.
+6. Add certificates for push notifications:                                                 
    5.1. For Android - add `google-services.json` to the `android/app` directory                          
    5.2. For iOS, create a profile and a `PRODUCTION` certificate in your Apple Developer account and add to xCode.
-6. Add a launch screen for iOS in xCode in `Runner > Runner > LaunchScreen` (the source file is in `Runner > Runner > Assets`)
-7. Add a launch screen for Android (`android > app  src > main > res`)
-8. Add app icon for iOS (`ios > Assets.xassets > AppIcon.appiconset`). Alternatively it can be done in xCode.
-9. Add app icon for Android (`android > app > src > main > res`)
-10. Add keystore for Android release. Using the following command you generate jks file:
+7. Add a launch screen for iOS in xCode in `Runner > Runner > LaunchScreen` (the source file is in `Runner > Runner > Assets`)
+8. Add a launch screen for Android (`android > app  src > main > res`)
+9. Add app icon for iOS (`ios > Assets.xassets > AppIcon.appiconset`). Alternatively it can be done in xCode.
+10. Add app icon for Android (`android > app > src > main > res`)
+11. Add keystore for Android release. Using the following command you generate jks file:
     ```
     keytool -genkeypair -alias upload -keyalg RSA -keysize 2048 -validity 9125 -keystore keystore.jks
     ```
