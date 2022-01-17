@@ -25,6 +25,7 @@ After that, your application will be ready to use.
 ## Build for Release
 1. Change the app name as you would like to have it in the app stores. This is done in the [app manifest for Android](https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/src/main/AndroidManifest.xml#L4) and xCode for iOS.
 2. Change applicationId and package name for Android.
+
    https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/build.gradle#L38
    https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/src/main/AndroidManifest.xml#L2
 4. For iOS, create a team at https://developer.apple.com
