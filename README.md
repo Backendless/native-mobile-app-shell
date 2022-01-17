@@ -23,7 +23,7 @@ You can find out how to do this [here](https://flutter.dev/docs/cookbook/design/
 After that, your application will be ready to use.
 
 ## Build for Release
-1. Change the app name as you wouldd like to have it in the app stores.
+1. Change the app name as you would like to have it in the app stores.
 2. Change bundle id from `com.backendless.native_app_shell` to one that would match your app/corporate identity.
 3. For iOS, create a team at https://developer.apple.com
 4. For Android, create a team at https://play.google.com/console/developers.
