@@ -31,7 +31,7 @@ After that, your application will be ready to use.
    https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/src/main/AndroidManifest.xml#L2
 4. Change Bundle Identifier and Display Name(The name of the application that will be displayed in the AppStore and on the desktop of the mobile device).
    This is can be done in xCode here: Runner - Runner(Targets) -> General. 
-   <img width="875" alt="Screenshot 2022-01-18 at 11 51 49" src="https://user-images.githubusercontent.com/50683634/149914592-20ef36ec-e12b-4644-bf6d-e63f3fbeab50.png">
+   <img width="857" alt="Screenshot 2022-01-18 at 11 59 57" src="https://user-images.githubusercontent.com/50683634/149915140-b0aa82fd-4a08-4b1e-9b51-67cc33496506.png">
 
 5. For iOS, create a team at https://developer.apple.com
 6. For Android, create a team at https://play.google.com/console/developers.
