@@ -29,21 +29,25 @@ After that, your application will be ready to use.
 
    https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/build.gradle#L38
    https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/src/main/AndroidManifest.xml#L2
-4. For iOS, create a team at https://developer.apple.com
-5. For Android, create a team at https://play.google.com/console/developers.
-6. Add certificates for push notifications:                                                 
-   5.1. For Android - add `google-services.json` to the `android/app` directory                          
-   5.2. For iOS, create a profile and a `PRODUCTION` certificate in your Apple Developer account and add to xCode.
-7. Add a launch screen for iOS in xCode in `Runner > Runner > LaunchScreen` (the source file is in `Runner > Runner > Assets`)
-8. Add a launch screen for Android (`android > app  src > main > res`)
-9. Add app icon for iOS (`ios > Assets.xassets > AppIcon.appiconset`). Alternatively it can be done in xCode.
-10. Add app icon for Android (`android > app > src > main > res`)
-11. Add keystore for Android release. Using the following command you generate jks file:
+4. Change Bundle Identifier and Display Name(The name of the application that will be displayed in the AppStore and on the desktop of the mobile device).
+   This is can be done in xCode here: Runner - Runner(Targets) -> General. 
+   <img width="875" alt="Screenshot 2022-01-18 at 11 51 49" src="https://user-images.githubusercontent.com/50683634/149914592-20ef36ec-e12b-4644-bf6d-e63f3fbeab50.png">
+
+5. For iOS, create a team at https://developer.apple.com
+6. For Android, create a team at https://play.google.com/console/developers.
+7. Add certificates for push notifications:                                                 
+   7.1. For Android - add `google-services.json` to the `android/app` directory                          
+   7.2. For iOS, create a profile and a `PRODUCTION` certificate in your Apple Developer account and add to xCode.
+8. Add a launch screen for iOS in xCode in `Runner > Runner > LaunchScreen` (the source file is in `Runner > Runner > Assets`)
+9. Add a launch screen for Android (`android > app  src > main > res`)
+10. Add app icon for iOS (`ios > Assets.xassets > AppIcon.appiconset`). Alternatively it can be done in xCode.
+11. Add app icon for Android (`android > app > src > main > res`)
+12. Add keystore for Android release. Using the following command you generate jks file:
     ```
     keytool -genkeypair -alias upload -keyalg RSA -keysize 2048 -validity 9125 -keystore keystore.jks
     ```
-11. Add the `key.properties` file to `android > app`. The file should have the password and file location for the previous step.
-12. Add the following code to `android > app > build.gradle`:
+13. Add the `key.properties` file to `android > app`. The file should have the password and file location for the previous step.
+14. Add the following code to `android > app > build.gradle`:
     ```
     def keystoreProperties = new Properties()
     def keystorePropertiesFile = rootProject.file('app/key.properties')
@@ -51,7 +55,7 @@ After that, your application will be ready to use.
         keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
     }
     ```
-13. Add the following code/configuration to the same section as above:
+15. Add the following code/configuration to the same section as above:
     ```gradle
     android {
     //some code
