@@ -39,9 +39,16 @@ After that, your application will be ready to use.
    7.1. For Android - add `google-services.json` to the `android/app` directory                          
    7.2. For iOS, create a profile and a `PRODUCTION` certificate in your Apple Developer account and add to xCode.
 8. Add a launch screen for iOS in xCode in `Runner > Runner > LaunchScreen` (the source file is in `Runner > Runner > Assets`)
+   ![image](https://user-images.githubusercontent.com/50683634/149917290-d53d4328-b1a0-41c4-9b99-e55be437829c.png)
+
 9. Add a launch screen for Android (`android > app  src > main > res`)
 10. Add app icon for iOS (`ios > Assets.xassets > AppIcon.appiconset`). Alternatively it can be done in xCode.
+    <img width="857" alt="Screenshot 2022-01-18 at 11 59 57" src="https://user-images.githubusercontent.com/50683634/149916779-1d93832a-4919-409a-92bd-f35435175974.png">
+    Icons can be generated here: https://appicon.co/
+   
 11. Add app icon for Android (`android > app > src > main > res`)
+    ![image](https://user-images.githubusercontent.com/50683634/149917564-d0ccc93e-312f-4ad4-af89-e80f50bb3f73.png)
+
 12. Add keystore for Android release. Using the following command you generate jks file:
     ```
     keytool -genkeypair -alias upload -keyalg RSA -keysize 2048 -validity 9125 -keystore keystore.jks
