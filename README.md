@@ -43,7 +43,7 @@ After that, your application will be ready to use.
 
 9. Add a launch screen for Android (`android > app  src > main > res`)
 10. Add app icon for iOS (`ios > Assets.xassets > AppIcon.appiconset`). Alternatively it can be done in xCode.
-    <img width="857" alt="Screenshot 2022-01-18 at 11 59 57" src="https://user-images.githubusercontent.com/50683634/149916779-1d93832a-4919-409a-92bd-f35435175974.png">
+    ![image](https://user-images.githubusercontent.com/50683634/149918213-aff29c9f-f1e7-4bd3-acd9-5e8f8f3eb200.png)
     Icons can be generated here: https://appicon.co/
    
 11. Add app icon for Android (`android > app > src > main > res`)
