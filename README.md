@@ -47,7 +47,8 @@ After that, your application will be ready to use.
     Icons can be generated here: https://appicon.co/
    
 11. Add app icon for Android (`android > app > src > main > res`)
-   <img height="400" alt="Screenshot 2022-01-18 at 11 59 57" src="https://user-images.githubusercontent.com/50683634/149917564-d0ccc93e-312f-4ad4-af89-e80f50bb3f73.png">
+
+    <img height="400" alt="Screenshot 2022-01-18 at 11 59 57" src="https://user-images.githubusercontent.com/50683634/149917564-d0ccc93e-312f-4ad4-af89-e80f50bb3f73.png">
 
 12. Add keystore for Android release. Using the following command you generate jks file:
     ```
