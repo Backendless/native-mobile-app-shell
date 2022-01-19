@@ -23,6 +23,11 @@ You can find out how to do this [here](https://flutter.dev/docs/cookbook/design/
 After that, your application will be ready to use.
 
 ## Build for Release
+#### Note:
+```diff
+- After the changes described below, you will not be able to run your application in debug(Android) mode.
+- Before proceeding to this part, we recommend that you thoroughly test the application.
+```
 1. Change the app name here in your `pubspec.yaml` file: https://github.com/Backendless/native-mobile-app-shell/blob/master/pubspec.yaml#L1
 2. Change the app name as you would like to have it in the app stores. This is done in the [app manifest for Android](https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/src/main/AndroidManifest.xml#L4) and xCode for iOS.
 3. Change applicationId and package name for Android.
@@ -41,12 +46,12 @@ After that, your application will be ready to use.
 8. Add a launch screen for iOS in xCode in `Runner > Runner > LaunchScreen` (the source file is in `Runner > Runner > Assets`)
    ![image](https://user-images.githubusercontent.com/50683634/149917290-d53d4328-b1a0-41c4-9b99-e55be437829c.png)
 
-9. Add a launch screen for Android (`android > app  src > main > res`)
+9. Add a launch screen for Android (`android > app  src > main > res > drawable && drawable-v21`)
 10. Add app icon for iOS (`ios > Assets.xassets > AppIcon.appiconset`). Alternatively it can be done in xCode.
     ![image](https://user-images.githubusercontent.com/50683634/149918213-aff29c9f-f1e7-4bd3-acd9-5e8f8f3eb200.png)
     Icons can be generated here: https://appicon.co/
    
-11. Add app icon for Android (`android > app > src > main > res`)
+11. Add app icon for Android (`android > app > src > main > res > mipmap-xxx)`)
 
     <img height="400" alt="Screenshot 2022-01-18 at 11 59 57" src="https://user-images.githubusercontent.com/50683634/149917564-d0ccc93e-312f-4ad4-af89-e80f50bb3f73.png">
 
