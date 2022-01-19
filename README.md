@@ -20,13 +20,15 @@ This repository contains the project to build a native app shell for your UI Bui
 If you want to use some custom fonts or icons, you need to declare that in your `pubspec.yaml` file.
 You can find out how to do this [here](https://flutter.dev/docs/cookbook/design/fonts).
 
-After that, your application will be ready to use.
+After that, your application will be ready for testing.
 
 ## Build for Release
 #### Note:
 ```diff
-- After the changes described below, you will not be able to run your application in debug(Android) mode.
-- Before proceeding to this part, we recommend that you thoroughly test the application.
+- The changes described below are specifically to build your app for release into the app stores.
+- Once the changes are made, you will not be able to run your application in the debug (Android) mode.
+- Before proceeding to this section of preparing your application, we recommend that you thoroughly test 
+- the application in preparation for the release.
 ```
 1. Change the app name here in your `pubspec.yaml` file: https://github.com/Backendless/native-mobile-app-shell/blob/master/pubspec.yaml#L1
 2. Change the app name as you would like to have it in the app stores. This is done in the [app manifest for Android](https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/src/main/AndroidManifest.xml#L4) and xCode for iOS.
