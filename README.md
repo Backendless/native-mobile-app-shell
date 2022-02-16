@@ -17,8 +17,11 @@ This repository contains the project to build a native app shell for your UI Bui
    flutter pub get
    ```
 
-If you want to use some custom fonts or icons, you need to declare that in your `pubspec.yaml` file.
-You can find out how to do this [here](https://flutter.dev/docs/cookbook/design/fonts).
+   If you want to use some custom fonts or icons, you need to declare that in your `pubspec.yaml` file.
+   You can find out how to do this [here](https://flutter.dev/docs/cookbook/design/fonts).
+
+7. For iOS, create a team at https://developer.apple.com and set Bundle Identifier [more details](https://docs.flutter.dev/deployment/ios):
+<img width="888" alt="Screenshot 2022-02-14 at 02 19 23" src="https://user-images.githubusercontent.com/50683634/153781929-bfba9e13-deac-4482-b614-321722854bba.png">
 
 After that, your application will be ready for testing.
 
@@ -40,29 +43,28 @@ After that, your application will be ready for testing.
    This is can be done in xCode here: Runner - Runner(Targets) -> General. 
    <img width="857" alt="Screenshot 2022-01-18 at 11 59 57" src="https://user-images.githubusercontent.com/50683634/149915140-b0aa82fd-4a08-4b1e-9b51-67cc33496506.png">
 
-5. For iOS, create a team at https://developer.apple.com
-6. For Android, create a team at https://play.google.com/console/developers.
-7. Add certificates for push notifications:                                                 
+5. For Android, create a team at https://play.google.com/console/developers.
+6. Add certificates for push notifications:                                                 
    7.1. For Android - add `google-services.json` to the `android/app` directory                          
    7.2. For iOS, create a profile and a `PRODUCTION` certificate in your Apple Developer account and add to xCode.
-8. Add a launch screen for iOS in xCode in `Runner > Runner > LaunchScreen` (the source file is in `Runner > Runner > Assets`)
+7. Add a launch screen for iOS in xCode in `Runner > Runner > LaunchScreen` (the source file is in `Runner > Runner > Assets`)
    ![image](https://user-images.githubusercontent.com/50683634/149917290-d53d4328-b1a0-41c4-9b99-e55be437829c.png)
 
-9. Add a launch screen for Android (`android > app  src > main > res > drawable && drawable-v21`)
-10. Add app icon for iOS (`ios > Assets.xassets > AppIcon.appiconset`). Alternatively it can be done in xCode.
+8. Add a launch screen for Android (`android > app  src > main > res > drawable && drawable-v21`)
+9. Add app icon for iOS (`ios > Assets.xassets > AppIcon.appiconset`). Alternatively it can be done in xCode.
     ![image](https://user-images.githubusercontent.com/50683634/149918213-aff29c9f-f1e7-4bd3-acd9-5e8f8f3eb200.png)
     Icons can be generated here: https://appicon.co/
    
-11. Add app icon for Android (`android > app > src > main > res > mipmap-xxx)`)
+10. Add app icon for Android (`android > app > src > main > res > mipmap-xxx)`)
 
     <img height="400" alt="Screenshot 2022-01-18 at 11 59 57" src="https://user-images.githubusercontent.com/50683634/149917564-d0ccc93e-312f-4ad4-af89-e80f50bb3f73.png">
 
-12. Add keystore for Android release. Using the following command you generate jks file:
+11. Add keystore for Android release. Using the following command you generate jks file:
     ```
     keytool -genkeypair -alias upload -keyalg RSA -keysize 2048 -validity 9125 -keystore keystore.jks
     ```
-13. Add the `key.properties` file to `android > app`. The file should have the password and file location for the previous step.
-14. Add the following code to `android > app > build.gradle`:
+12. Add the `key.properties` file to `android > app`. The file should have the password and file location for the previous step.
+13. Add the following code to `android > app > build.gradle`:
     ```
     def keystoreProperties = new Properties()
     def keystorePropertiesFile = rootProject.file('app/key.properties')
@@ -70,7 +72,7 @@ After that, your application will be ready for testing.
         keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
     }
     ```
-15. Add the following code/configuration to the same section as above:
+14. Add the following code/configuration to the same section as above:
     ```gradle
     android {
     //some code
