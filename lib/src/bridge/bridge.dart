@@ -12,37 +12,29 @@ class Bridge {
 
   Bridge({required this.controller});
 
-  Future addWebMessageListener(
-      {Set<String>? allowedOriginRules, FunctionHandler? funcToRun}) async {
+  Future addWebMessageListener() async {
     this.controller.addWebMessageListener(WebMessageListener(
         jsObjectName: 'UI_BUILDER_WEB_MESSAGE_LISTENER_OBJECT',
-        allowedOriginRules: allowedOriginRules,
+        allowedOriginRules: Set.from(['*']),
         onPostMessage: (message, sourceOrigin, isMainFrame, replyProxy) async {
-          String result = '';
+          String? result;
           try {
             Map data = jsonDecode(message!);
 
-            if (funcToRun != null) {
-              var ev = BridgeValidator.hasSystemEvent(data['event']);
-              switch (ev) {
-                case SystemEvents.REQUEST:
-                  if (_isRegistered) return;
-                  result =
-                      (await BridgeManager.processFunc(() => funcToRun, data))!;
-                  if (!result.contains('error')) _isRegistered = true;
-                  break;
-                default:
-                  throw Exception('Not supported operation');
-              }
-            } else
-              result = BridgeManager.buildResponse(
-                  id: data['id']!,
-                  type: data['payload']['type'],
-                  response: 'Processed');
+            var systemEvent = BridgeValidator.hasSystemEvent(data['event']);
+            switch (systemEvent) {
+              case SystemEvents.REQUEST:
+                result = await BridgeManager.executeRequest(data);
+                break;
+              case SystemEvents.RESPONSE:
+                break;
+              default:
+                break;
+            }
+            await replyProxy.postMessage(result!);
           } catch (ex) {
-            throw new Exception(ex);
+            throw Exception(ex);
           }
-          if (result.isNotEmpty) replyProxy.postMessage(result);
         }));
   }
 
