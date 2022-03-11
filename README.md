@@ -7,6 +7,10 @@ This repository contains the project to build a native app shell for your UI Bui
 
 ## Setup
 1. Prepare your IDE. [How to prepare your IDE](https://flutter.dev/docs/get-started/install/macos)
+#### Note:
+```diff
+- The Java SDK version must be at least 11.
+```
 2. Fetch/get this project from github.
 3. Navigate to UI Builder and click the `Publish the container` icon. Select a directory where the UI Container (i.e. your UI Builder app) will be published. It is recommended to select a subdirectory under the `/web` directory.
 4. Switch to the `BACKEND` section of Backendless Console and navigate to the `Files` section. Locate the directory from step above and navigate into the directory. Create an archive by clicking the 'Zip Directory' button.
