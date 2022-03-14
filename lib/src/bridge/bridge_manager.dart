@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:native_app_shell_mobile/src/web_view/web_view_container.dart';
+import '../web_view/web_view_container.dart';
+import 'package:backendless_sdk/backendless_sdk.dart';
 
 class BridgeManager {
   static const String _OPERATION_REGISTER_DEVICE = 'REGISTER_DEVICE';
@@ -8,18 +9,22 @@ class BridgeManager {
     String operations = data['payload']['type'];
 
     try {
+      var result;
       switch (operations) {
         case _OPERATION_REGISTER_DEVICE:
           {
-            var result = await WebViewContainer.registerForPushNotifications();
+            result = await WebViewContainer.registerForPushNotifications();
             if (result == null) throw Exception('Cannot register device');
+            return buildResponse(
+              id: data['payload']['id']!,
+              type: data['payload']['type'],
+              response: {
+                'deviceToken': (result as DeviceRegistrationResult).deviceToken
+              },
+            );
           }
       }
-      return buildResponse(
-        id: data['payload']['id']!,
-        type: data['payload']['type'],
-        response: {'foo': 123},
-      );
+      throw Exception('Flutter error in bridge logic');
     } catch (ex) {
       return buildResponse(
         id: data['payload']['id']!,
