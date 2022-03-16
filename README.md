@@ -21,8 +21,17 @@ This repository contains the project to build a native app shell for your UI Bui
    flutter pub get
    ```
 
-   If you want to use some custom fonts or icons, you need to declare that in your `pubspec.yaml` file.
-   You can find out how to do this [here](https://flutter.dev/docs/cookbook/design/fonts).
+   6.1. If you want to use some custom fonts or icons, you need to declare that in your `pubspec.yaml` file.
+        You can find out how to do this [here](https://flutter.dev/docs/cookbook/design/fonts).
+   
+   6.2. If you are using custom or reusable components, then you need to include them in the list of assets in the `pubspec.yaml` file. 
+        For example you have 1 reusable component:
+        
+      <img width="428" alt="Screenshot 2022-03-14 at 14 10 19" src="https://user-images.githubusercontent.com/50683634/158171416-81dec155-c49a-4661-a992-fec413ff4304.png">
+
+      So that everything works correctly, add the following line to the assets of the `pubspec.yaml` file like this:
+
+      <img width="695" alt="Screenshot 2022-03-14 at 14 28 24" src="https://user-images.githubusercontent.com/50683634/158173709-a92092f2-2347-4679-b43b-d309d57b4ea6.png">
 
 7. For iOS, create a team at https://developer.apple.com and set Bundle Identifier [more details](https://docs.flutter.dev/deployment/ios):
 <img width="888" alt="Screenshot 2022-02-14 at 02 19 23" src="https://user-images.githubusercontent.com/50683634/153781929-bfba9e13-deac-4482-b614-321722854bba.png">
