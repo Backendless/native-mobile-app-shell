@@ -11,10 +11,10 @@ Future main() async {
   //TODO add your permissions here:
   //Permission.storage.request();
 
-  if (Platform.isAndroid) {
+  /*if (Platform.isAndroid) {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
     await Permission.camera.request();
-  }
+  }*/
 
   runApp(StartPageStateless());
 }

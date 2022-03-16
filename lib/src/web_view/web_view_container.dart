@@ -121,7 +121,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
             onWebViewCreated: (InAppWebViewController controller) async {
               webViewController = controller;
               manager = Bridge(controller: webViewController!);
-              setBridge();
+              await setBridge();
 
               await controller.loadFile(assetFilePath: syncPath!);
             },
@@ -259,7 +259,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
     }
   }
 
-  void setBridge() async {
+  Future setBridge() async {
     if (!io.Platform.isAndroid ||
         await AndroidWebViewFeature.isFeatureSupported(
             AndroidWebViewFeature.WEB_MESSAGE_LISTENER))

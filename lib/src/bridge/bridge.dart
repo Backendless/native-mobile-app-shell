@@ -13,7 +13,7 @@ class Bridge {
   Bridge({required this.controller});
 
   Future addWebMessageListener() async {
-    this.controller.addWebMessageListener(WebMessageListener(
+    await this.controller.addWebMessageListener(WebMessageListener(
         jsObjectName: 'UI_BUILDER_WEB_MESSAGE_LISTENER_OBJECT',
         allowedOriginRules: Set.from(['*']),
         onPostMessage: (message, sourceOrigin, isMainFrame, replyProxy) async {
