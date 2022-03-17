@@ -10,6 +10,7 @@ import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:overlay_support/overlay_support.dart';
 import '../push_notifications/message_notification.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:geolocator/geolocator.dart';
 
 class WebViewContainer extends StatefulWidget {
   final syncPath;
@@ -89,6 +90,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
         useHybridComposition: true,
         allowFileAccess: true,
         allowContentAccess: true,
+        geolocationEnabled: true,
       ),
       ios: IOSInAppWebViewOptions(
         allowsInlineMediaPlayback: true,
@@ -97,6 +99,9 @@ class _WebViewContainerState extends State<WebViewContainer> {
         disallowOverScroll: true,
       ),
     );
+
+    // *** Uncomment if geolocation is used ***
+    //geoInit();
 
     if (registerForPushNotificationsOnRun) {
       WebViewContainer.registerForPushNotifications();
@@ -130,6 +135,11 @@ class _WebViewContainerState extends State<WebViewContainer> {
               return PermissionRequestResponse(
                   resources: resources,
                   action: PermissionRequestResponseAction.GRANT);
+            },
+            androidOnGeolocationPermissionsShowPrompt:
+                (InAppWebViewController controller, String origin) async {
+              return GeolocationPermissionShowPromptResponse(
+                  origin: origin, allow: true, retain: true);
             },
             shouldOverrideUrlLoading: (controller, navigationAction) async {
               var uri = navigationAction.request.url!;
@@ -257,6 +267,12 @@ class _WebViewContainerState extends State<WebViewContainer> {
       //await SystemNavigator.pop();
       return Future.value(true);
     }
+  }
+
+  void geoInit() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    await Geolocator.requestPermission();
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
 
   Future setBridge() async {
