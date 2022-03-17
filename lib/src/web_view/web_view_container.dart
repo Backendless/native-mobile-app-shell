@@ -1,4 +1,5 @@
 import 'dart:io' as io;
+import 'package:native_app_shell_mobile/configurator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../utils/initializer.dart';
@@ -64,7 +65,6 @@ class _WebViewContainerState extends State<WebViewContainer> {
   final _key = UniqueKey();
 
   String? syncPath;
-  bool registerForPushNotificationsOnRun = true;
 
   InAppWebViewController? webViewController;
   InAppWebViewGroupOptions? options;
@@ -100,12 +100,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
       ),
     );
 
-    // *** Uncomment if geolocation is used ***
-    //geoInit();
-
-    if (registerForPushNotificationsOnRun) {
-      WebViewContainer.registerForPushNotifications();
-    }
+    _configureWebView();
   }
 
   @override
@@ -269,7 +264,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
     }
   }
 
-  void geoInit() async {
+  void _geoInit() async {
     LocationPermission permission = await Geolocator.checkPermission();
     await Geolocator.requestPermission();
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
@@ -280,5 +275,13 @@ class _WebViewContainerState extends State<WebViewContainer> {
         await AndroidWebViewFeature.isFeatureSupported(
             AndroidWebViewFeature.WEB_MESSAGE_LISTENER))
       await manager!.addWebMessageListener();
+  }
+
+  void _configureWebView() {
+    if (AppConfigurator.USE_GEOLOCATION) _geoInit();
+
+    if (AppConfigurator.REGISTER_FOR_PUSH_NOTIFICATIONS_ON_RUN) {
+      WebViewContainer.registerForPushNotifications();
+    }
   }
 }
