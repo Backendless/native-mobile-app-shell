@@ -32,8 +32,10 @@ This repository contains the project to build a native app shell for your UI Bui
       So that everything works correctly, add the following line to the assets of the `pubspec.yaml` file like this:
 
       <img width="695" alt="Screenshot 2022-03-14 at 14 28 24" src="https://user-images.githubusercontent.com/50683634/158173709-a92092f2-2347-4679-b43b-d309d57b4ea6.png">
-#### Note: Flutter ignores all subfolders, so if there are subfolders in reused components, styles, etc., they must be specified.
-
+### Important: 
+```diff
+- Flutter ignores all subfolders, so if there are subfolders in reused components, styles, etc., they must be specified.
+```
 
 7. For iOS, create a team at https://developer.apple.com and set Bundle Identifier [more details](https://docs.flutter.dev/deployment/ios):
 <img width="888" alt="Screenshot 2022-02-14 at 02 19 23" src="https://user-images.githubusercontent.com/50683634/153781929-bfba9e13-deac-4482-b614-321722854bba.png">
