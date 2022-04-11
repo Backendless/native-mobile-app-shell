@@ -34,7 +34,7 @@ This repository contains the project to build a native app shell for your UI Bui
       <img width="695" alt="Screenshot 2022-03-14 at 14 28 24" src="https://user-images.githubusercontent.com/50683634/158173709-a92092f2-2347-4679-b43b-d309d57b4ea6.png">
 ### Important: 
 ```diff
-- Flutter ignores all subfolders, so if there are subfolders in reused components, styles, etc., they must be specified.
+- Flutter ignores all subfolders, so if there are subfolders in reusable components, styles, etc., they must be specified.
 ```
 
 7. For iOS, create a team at https://developer.apple.com and set Bundle Identifier [more details](https://docs.flutter.dev/deployment/ios):
