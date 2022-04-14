@@ -2,11 +2,11 @@ import '../utils/coder.dart';
 import '../types/system_events.dart';
 
 class BridgeValidator {
-  static SystemEvents? hasSystemEvent(String eventType) {
+  static Future<SystemEvents?> hasSystemEvent(String eventType) async {
     var data = SystemEvents.values;
 
     for (SystemEvents ev in data) {
-      if (eventType == Coder.decodeEnum(ev)) {
+      if (eventType == await Coder.decodeEnum(ev)) {
         return ev;
       }
     }

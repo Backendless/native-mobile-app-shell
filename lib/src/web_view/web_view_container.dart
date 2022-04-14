@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 import 'package:native_app_shell_mobile/configurator.dart';
+import 'package:native_app_shell_mobile/src/bridge/bridge_ui_builder_functions.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../utils/initializer.dart';
@@ -17,45 +18,6 @@ class WebViewContainer extends StatefulWidget {
   final syncPath;
 
   WebViewContainer(this.syncPath);
-
-  static Future<dynamic> registerForPushNotifications(
-      {List<String>? channels}) async {
-    List<String> channelsList = [];
-
-    if (channels != null)
-      channelsList.addAll(channels);
-    else
-      channelsList.add('default');
-
-    try {
-      return await Backendless.messaging
-          .registerDevice(channelsList, null, onMessage);
-    } catch (ex) {
-      return ex;
-    }
-  }
-
-  static void onMessage(Map<String, dynamic> message) async {
-    AudioCache pushSound = AudioCache();
-    pushSound.play('notification_sounds/push_sound.wav');
-    PushNotificationMessage notification = PushNotificationMessage();
-
-    if (io.Platform.isIOS) {
-      Map pushData = message['aps']['alert'];
-      notification.title = pushData['title'];
-      notification.body = pushData['body'];
-    } else if (io.Platform.isAndroid) {
-      notification.title = message['android-content-title'];
-      notification.body = message['message'];
-    }
-
-    showOverlayNotification((context) {
-      return MessageNotification(
-        title: notification.title,
-        body: notification.body,
-      );
-    });
-  }
 
   @override
   _WebViewContainerState createState() => _WebViewContainerState(syncPath);
@@ -121,7 +83,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
             onWebViewCreated: (InAppWebViewController controller) async {
               webViewController = controller;
               manager = Bridge(controller: webViewController!);
-              await setBridge();
+              await setBridge(context);
 
               await controller.loadFile(assetFilePath: syncPath!);
             },
@@ -270,18 +232,19 @@ class _WebViewContainerState extends State<WebViewContainer> {
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
 
-  Future setBridge() async {
+  Future setBridge(BuildContext context) async {
     if (!io.Platform.isAndroid ||
         await AndroidWebViewFeature.isFeatureSupported(
-            AndroidWebViewFeature.WEB_MESSAGE_LISTENER))
-      await manager!.addWebMessageListener();
+            AndroidWebViewFeature.WEB_MESSAGE_LISTENER)) {
+      await manager!.addWebMessageListener(context);
+    }
   }
 
   void _configureWebView() {
     if (AppConfigurator.USE_GEOLOCATION) _geoInit();
 
     if (AppConfigurator.REGISTER_FOR_PUSH_NOTIFICATIONS_ON_RUN) {
-      WebViewContainer.registerForPushNotifications();
+      BridgeUIBuilderFunctions.registerForPushNotifications();
     }
   }
 }
