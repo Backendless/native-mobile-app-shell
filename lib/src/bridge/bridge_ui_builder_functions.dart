@@ -56,6 +56,7 @@ class BridgeUIBuilderFunctions {
                             initialOptions: InAppWebViewGroupOptions(
                               crossPlatform: InAppWebViewOptions(
                                 useShouldOverrideUrlLoading: true,
+                                disableHorizontalScroll: true,
                               ),
                             ),
                             onLoadStop: (controller, url) async {
@@ -81,7 +82,7 @@ class BridgeUIBuilderFunctions {
 
     if (userId != null) return await Backendless.userService.findById(userId!);
 
-    Navigator.pop(context);
+    return;
   }
 
   static void onMessage(Map<String, dynamic> message) async {

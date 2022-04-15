@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:native_app_shell_mobile/src/bridge/bridge_ui_builder_functions.dart';
-
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../web_view/web_view_container.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
@@ -30,8 +30,23 @@ class BridgeManager {
           }
         case _SOCIAL_LOGIN:
           {
-            result = await BridgeUIBuilderFunctions.socialLogin(
-                'linkedin', data['_context']);
+            if (data['payload']['options']['providerCode'] == 'apple') {
+              final credential = await SignInWithApple.getAppleIDCredential(
+                  scopes: [
+                    AppleIDAuthorizationScopes.email,
+                    AppleIDAuthorizationScopes.fullName,
+                  ],
+                  webAuthenticationOptions: WebAuthenticationOptions(
+                    clientId: 'com.backendless.testSocial',
+                    redirectUri: Uri(),
+                  ));
+              result = await Backendless.customService
+                  .invoke('AppleAuth', 'login', credential.identityToken);
+            } else {
+              result = await BridgeUIBuilderFunctions.socialLogin(
+                  data['payload']['options']['providerCode'], data['_context']);
+            }
+            if (result == null) result = '_CANCELED BY USER';
             return buildResponse(
               id: data['payload']['id'],
               type: data['payload']['type'],
@@ -43,7 +58,8 @@ class BridgeManager {
           }
           break;
       }
-      throw Exception('Flutter error in bridge logic. Unknown operation type.');
+      throw Exception(
+          'Flutter error in bridge logic. Unknown operation type or something else.');
     } catch (ex) {
       return buildResponse(
         id: data['payload']['id']!,

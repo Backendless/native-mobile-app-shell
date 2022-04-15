@@ -33,7 +33,9 @@ class Bridge {
               default:
                 break;
             }
-            await replyProxy.postMessage(result!);
+            if (result!.contains('_CANCELED BY USER')) return;
+
+            await replyProxy.postMessage(result);
           } catch (ex) {
             throw Exception(ex);
           }
