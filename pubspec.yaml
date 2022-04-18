@@ -15,10 +15,11 @@ dependencies:
   permission_handler: ^8.1.6
   flutter_inappwebview: ^5.3.2
   url_launcher: ^6.0.10
-  backendless_sdk: ^7.1.8
+  backendless_sdk: ^7.2.1
   overlay_support: ^1.2.1
   audioplayers: ^0.20.1
   geolocator: ^8.0.5
+  sign_in_with_apple: ^3.3.0
 
 dev_dependencies:
   flutter_test:
@@ -30,7 +31,7 @@ flutter:
     - images/
     - assets/notification_sounds/push_sound.wav
     - assets/ui_builder_app/
-    - assets/ui_builder_app/library/sdk/sdk.js
+    - assets/ui_builder_app/library/sdk/
 
   fonts:
     - family: CustomAssets

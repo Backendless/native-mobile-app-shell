@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 
 class Coder {
-  static String decodeEnum(SystemEvents se) {
+  static Future<String> decodeEnum(SystemEvents se) async {
     return se.systemEvent;
   }
 
