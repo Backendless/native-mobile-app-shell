@@ -1,16 +1,9 @@
 import 'dart:io' as io;
 import 'package:native_app_shell_mobile/configurator.dart';
 import 'package:native_app_shell_mobile/src/bridge/bridge_ui_builder_functions.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../utils/initializer.dart';
 import '../bridge/bridge.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
-import '../types/push_notification_message.dart';
-import 'package:backendless_sdk/backendless_sdk.dart';
-import 'package:overlay_support/overlay_support.dart';
-import '../push_notifications/message_notification.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
 

@@ -3,7 +3,6 @@ import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:native_app_shell_mobile/src/push_notifications/message_notification.dart';
 import 'package:native_app_shell_mobile/src/types/push_notification_message.dart';
-import 'package:native_app_shell_mobile/src/web_view/web_view_container.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'dart:io' as io;
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';

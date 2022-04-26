@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:native_app_shell_mobile/src/bridge/bridge_ui_builder_functions.dart';
 import 'package:native_app_shell_mobile/src/utils/request_container.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import '../web_view/web_view_container.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
 class BridgeManager {
@@ -20,7 +19,8 @@ class BridgeManager {
         case _OPERATION_REGISTER_DEVICE:
           {
             result =
-                await BridgeUIBuilderFunctions.registerForPushNotifications();
+                await BridgeUIBuilderFunctions.registerForPushNotifications(
+                    channels: <String>['default']);
             if (result == null) throw Exception('Cannot register device');
             return buildResponse(
               data: requestContainer,
