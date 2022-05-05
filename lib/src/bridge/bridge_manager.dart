@@ -9,9 +9,8 @@ class BridgeManager {
   static const String _SOCIAL_LOGIN = 'SOCIAL_LOGIN';
 
   static Future<String> executeRequest(Map data) async {
-    final requestContainer = RequestContainer(
-        data['payload']['id'], data['payload']['type'],
-        userToken: data['payload']['userToken']);
+    final requestContainer =
+        RequestContainer(data['payload']['id'], data['payload']['type']);
 
     try {
       var result;
@@ -38,11 +37,12 @@ class BridgeManager {
                     AppleIDAuthorizationScopes.fullName,
                   ],
                   webAuthenticationOptions: WebAuthenticationOptions(
-                    clientId: data['payload']['options']['clientId'],
+                    clientId: data['payload']['options']['options']['clientId'],
                     redirectUri: Uri(),
                   ));
-              result = await Backendless.customService
-                  .invoke('AppleAuth', 'login', credential.identityToken);
+              result = await Backendless.customService.invoke('AppleAuth',
+                  'login', credential.identityToken); //get your user
+              result = BackendlessUser.fromJson(result);
             } else {
               result = await BridgeUIBuilderFunctions.socialLogin(
                   data['payload']['options']['providerCode'], data['_context']);
@@ -50,9 +50,7 @@ class BridgeManager {
             if (result == null) result = '_CANCELED BY USER';
             return buildResponse(
               data: requestContainer,
-              response: {
-                result,
-              },
+              response: result,
             );
           }
       }
@@ -70,7 +68,7 @@ class BridgeManager {
 
   static String buildResponse(
       {required RequestContainer data, dynamic response, String? error}) {
-    Map? result = {
+    Map? finalResult = {
       'event': 'RESPONSE',
       'payload': <String?, dynamic>{
         'type': data.operations,
@@ -79,13 +77,16 @@ class BridgeManager {
       }
     };
 
-    if (response != null)
-      result['payload']['result'] = response.toString();
-    else
-      result['payload']['error'] = error;
+    if (response != null) {
+      if (response is BackendlessUser)
+        finalResult['payload']['result'] = response.toJson();
+      else
+        finalResult['payload']['result'] = response.toString();
+    } else
+      finalResult['payload']['error'] = error;
 
     try {
-      return json.encode(result);
+      return json.encode(finalResult);
     } catch (ex) {
       throw new Exception(ex);
     }

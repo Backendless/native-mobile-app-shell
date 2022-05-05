@@ -25,7 +25,8 @@ class BridgeUIBuilderFunctions {
     }
   }
 
-  static Future<dynamic> socialLogin(String providerCode, BuildContext context,
+  static Future<BackendlessUser?> socialLogin(
+      String providerCode, BuildContext context,
       {Map<String, String>? fieldsMappings, List<String>? scope}) async {
     String? result = await Backendless.userService.getAuthorizationUrlLink(
       providerCode,
@@ -34,6 +35,7 @@ class BridgeUIBuilderFunctions {
     );
 
     String? userId;
+    String? userToken;
 
     if (result?.isNotEmpty ?? false)
       await showDialog(
@@ -70,6 +72,8 @@ class BridgeUIBuilderFunctions {
                                   .contains('userId')) {
                                 userId = navigationAction
                                     .request.url!.queryParameters['userId'];
+                                userToken = navigationAction
+                                    .request.url!.queryParameters['userToken'];
                                 Navigator.pop(context);
                               }
                             }))
@@ -79,9 +83,13 @@ class BridgeUIBuilderFunctions {
             );
           });
 
-    if (userId != null) return await Backendless.userService.findById(userId!);
+    if (userId != null) {
+      BackendlessUser? user = await Backendless.userService.findById(userId!);
+      user!.setProperty('user-token', userToken);
+      return user;
+    }
 
-    return;
+    return null;
   }
 
   static void onMessage(Map<String, dynamic> message) async {
