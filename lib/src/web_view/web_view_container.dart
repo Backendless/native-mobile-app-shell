@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../bridge/bridge_ui_builder_functions.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class WebViewContainer extends StatefulWidget {
@@ -88,8 +89,44 @@ class _WebViewContainerState extends State<WebViewContainer> {
             },
             androidOnGeolocationPermissionsShowPrompt:
                 (InAppWebViewController controller, String origin) async {
-              return GeolocationPermissionShowPromptResponse(
-                  origin: origin, allow: true, retain: true);
+              await requestPermission();
+              bool? result = await showDialog<bool>(
+                context: context,
+                barrierDismissible: false, // user must tap button!
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Allow access location $origin'),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: <Widget>[
+                          Text('Allow access location $origin'),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('Allow'),
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                      ),
+                      TextButton(
+                        child: Text('Denied'),
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+              if (result != null && result) {
+                return Future.value(GeolocationPermissionShowPromptResponse(
+                    origin: origin, allow: true, retain: true));
+              } else {
+                return Future.value(GeolocationPermissionShowPromptResponse(
+                    origin: origin, allow: false, retain: false));
+              }
             },
             shouldOverrideUrlLoading: (controller, navigationAction) async {
               var uri = navigationAction.request.url!;
@@ -239,5 +276,10 @@ class _WebViewContainerState extends State<WebViewContainer> {
     if (AppConfigurator.REGISTER_FOR_PUSH_NOTIFICATIONS_ON_RUN) {
       BridgeUIBuilderFunctions.registerForPushNotifications();
     }
+  }
+
+  Future<void> requestPermission() async {
+    Map<Permission, PermissionStatus> statuses =
+        await [Permission.location].request();
   }
 }
