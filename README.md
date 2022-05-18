@@ -51,6 +51,9 @@ After that, your application will be ready for testing.
 - the application in preparation for the release.
 ```
 1. Change the app name here in your `pubspec.yaml` file: https://github.com/Backendless/native-mobile-app-shell/blob/master/pubspec.yaml#L1
+   After this step, don't forget to change the package names in another part of the project:
+   Make sure the package name in `AndroidManifest.xml` and `android/app/build.gradle` and `android/app/src/.../MainActivity.java` are the same. 
+   Also check `ios/Runner/Info.plist` the value of `CFBundleName` for iOS versions.
 2. Change the app name as you would like to have it in the app stores. This is done in the [app manifest for Android](https://github.com/Backendless/native-mobile-app-shell/blob/master/android/app/src/main/AndroidManifest.xml#L4) and xCode for iOS.
 3. Change applicationId and package name for Android.
 

@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:native_app_shell_mobile/src/bridge/bridge_ui_builder_functions.dart';
-import 'package:native_app_shell_mobile/src/utils/request_container.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import '../utils/request_container.dart';
+import '../bridge/bridge_ui_builder_functions.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class BridgeManager {
   static const String _OPERATION_REGISTER_DEVICE = 'REGISTER_DEVICE';

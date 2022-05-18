@@ -1,11 +1,11 @@
 import 'dart:io' as io;
-import 'package:native_app_shell_mobile/configurator.dart';
-import 'package:native_app_shell_mobile/src/bridge/bridge_ui_builder_functions.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '/configurator.dart';
 import '../bridge/bridge.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../bridge/bridge_ui_builder_functions.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class WebViewContainer extends StatefulWidget {
   final syncPath;

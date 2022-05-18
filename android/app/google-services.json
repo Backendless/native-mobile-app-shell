@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "559083352946",
-    "project_id": "native-app-shell",
-    "storage_bucket": "native-app-shell.appspot.com"
+    "project_number": "690361107122",
+    "project_id": "native-app-shell-mobile",
+    "storage_bucket": "native-app-shell-mobile.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:559083352946:android:b9a4f73882779f8af663eb",
+        "mobilesdk_app_id": "1:690361107122:android:8f1932c10538d8d4093fab",
         "android_client_info": {
-          "package_name": "com.backendless.native_app_shell"
+          "package_name": "com.backendless.native_app_shell_mobile"
         }
       },
       "oauth_client": [
         {
-          "client_id": "559083352946-vsipgdufhlo236hfj1t445fjke7bpj9j.apps.googleusercontent.com",
+          "client_id": "690361107122-3g3s5kosecrpltvat8ecsfdasrg578fs.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAAjMHzWk0FumW4s-pQ6mW4BHEWBK4t05s"
+          "current_key": "AIzaSyDji0h4nf8Dn1VuWHhfLXbrxvn-KFcDjO0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "559083352946-vsipgdufhlo236hfj1t445fjke7bpj9j.apps.googleusercontent.com",
+              "client_id": "690361107122-3g3s5kosecrpltvat8ecsfdasrg578fs.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

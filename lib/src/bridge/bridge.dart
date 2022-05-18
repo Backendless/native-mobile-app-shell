@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'bridge_manager.dart';
 import 'bridge_validator.dart';
 import 'package:uuid/uuid.dart';
 import '../types/system_events.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class Bridge {
