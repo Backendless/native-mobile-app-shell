@@ -1,4 +1,6 @@
 import 'dart:io' as io;
+import 'package:native_app_shell_mobile/src/web_view/build_child_web_view.dart';
+
 import '/configurator.dart';
 import '../bridge/bridge.dart';
 import 'package:flutter/material.dart';
@@ -155,6 +157,10 @@ class _WebViewContainerState extends State<WebViewContainer> {
             onConsoleMessage: (controller, consoleMessage) {
               print(consoleMessage);
             },
+            onCreateWindow: (controller, action) async {
+              await _handleCreateWindow(context, action.request.url.toString());
+              return true;
+            },
             onLoadStart: (InAppWebViewController controller, url) {},
             onLoadError: (controller, url, code, message) {
               print('code: $code\n'
@@ -268,6 +274,14 @@ class _WebViewContainerState extends State<WebViewContainer> {
             AndroidWebViewFeature.WEB_MESSAGE_LISTENER)) {
       await manager!.addWebMessageListener(context);
     }
+  }
+
+  Future<void> _handleCreateWindow(
+      BuildContext context, String childUrl) async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => buildChildWebView(context, childUrl)));
   }
 
   void _configureWebView() {
