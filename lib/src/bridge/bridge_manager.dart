@@ -81,7 +81,7 @@ class BridgeManager {
       if (response is BackendlessUser)
         finalResult['payload']['result'] = response.toJson();
       else
-        finalResult['payload']['result'] = response.toString();
+        finalResult['payload']['result'] = response;
     } else
       finalResult['payload']['error'] = error;
 
