@@ -238,6 +238,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
             },
             iosOnNavigationResponse: (controller, response) async {
               print(response.response);
+              return null;
             },
             onDownloadStart: (controller, url) {
               print('Downloading started with url: $url');

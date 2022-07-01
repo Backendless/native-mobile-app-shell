@@ -78,6 +78,7 @@ class BridgeUIBuilderFunctions {
                                     .request.url!.queryParameters['userToken'];
                                 Navigator.pop(context);
                               }
+                              return null;
                             }))
                   ],
                 ),
