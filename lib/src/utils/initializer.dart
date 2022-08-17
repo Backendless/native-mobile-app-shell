@@ -4,7 +4,7 @@ import 'package:overlay_support/overlay_support.dart';
 
 Future<void> initApp({required String pathToSettings}) async {
   kNotificationSlideDuration = const Duration(milliseconds: 500);
-  kNotificationDuration = const Duration(milliseconds: 1500);
+  kNotificationDuration = const Duration(milliseconds: 4000);
 
   final initData = await Coder.readJson(path: pathToSettings);
 

@@ -13,4 +13,11 @@ class Coder {
 
     return data;
   }
+
+  static dynamic dateSerializer(dynamic object) {
+    if (object is DateTime) {
+      return object.toIso8601String();
+    }
+    return object;
+  }
 }

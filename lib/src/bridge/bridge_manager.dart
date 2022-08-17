@@ -2,6 +2,7 @@ import 'dart:convert';
 import '../utils/request_container.dart';
 import '../bridge/bridge_ui_builder_functions.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
+import 'package:native_app_shell_mobile/src/utils/coder.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class BridgeManager {
@@ -86,7 +87,10 @@ class BridgeManager {
       finalResult['payload']['error'] = error;
 
     try {
-      return json.encode(finalResult);
+      return json.encode(
+        finalResult,
+        toEncodable: Coder.dateSerializer,
+      );
     } catch (ex) {
       throw new Exception(ex);
     }

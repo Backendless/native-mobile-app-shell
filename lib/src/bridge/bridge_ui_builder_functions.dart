@@ -1,13 +1,24 @@
 import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../types/push_notification_message.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:overlay_support/overlay_support.dart';
 import '../push_notifications/message_notification.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class BridgeUIBuilderFunctions {
+  /*static late FlutterLocalNotificationsPlugin _notifications;
+  static late AndroidInitializationSettings androidInit;
+  static late IOSInitializationSettings iosInit;
+  static late InitializationSettings initSetting;
+  static late AndroidNotificationDetails androidDetails;
+  static late IOSNotificationDetails iosDetails;
+  static late NotificationDetails generalNotificationDetails;
+  static bool isInitialized = false;*/
+
   static Future<dynamic> registerForPushNotifications(
       {List<String>? channels}) async {
     List<String> channelsList = [];
@@ -57,9 +68,13 @@ class BridgeUIBuilderFunctions {
                             initialOptions: InAppWebViewGroupOptions(
                               crossPlatform: InAppWebViewOptions(
                                 useShouldOverrideUrlLoading: true,
-                                disableHorizontalScroll: true,
+                                disableHorizontalScroll: false,
                                 userAgent:
                                     providerCode != 'facebook' ? 'random' : '',
+                              ),
+                              android: AndroidInAppWebViewOptions(
+                                useHybridComposition: true,
+                                safeBrowsingEnabled: false,
                               ),
                             ),
                             onLoadStop: (controller, url) async {
@@ -96,6 +111,24 @@ class BridgeUIBuilderFunctions {
   }
 
   static void onMessage(Map<String, dynamic> message) async {
+    /*if (!isInitialized) {
+      androidInit =
+          AndroidInitializationSettings('backendless_logo'); //for logo
+      iosInit = IOSInitializationSettings();
+      initSetting = InitializationSettings(android: androidInit, iOS: iosInit);
+      _notifications = FlutterLocalNotificationsPlugin();
+      await _notifications.initialize(initSetting);
+      androidDetails =
+          AndroidNotificationDetails('1', 'channelName', 'channel Description');
+      iosDetails = IOSNotificationDetails();
+      generalNotificationDetails =
+          NotificationDetails(android: androidDetails, iOS: iosDetails);
+      isInitialized = true;
+    }
+
+    await _notifications.show(0, message['android-content-title'],
+        message['message'], generalNotificationDetails);
+        */
     AudioCache pushSound = AudioCache();
     pushSound.play('notification_sounds/push_sound.wav');
     PushNotificationMessage notification = PushNotificationMessage();
@@ -109,11 +142,16 @@ class BridgeUIBuilderFunctions {
       notification.body = message['message'];
     }
 
-    showOverlayNotification((context) {
-      return MessageNotification(
+    showSimpleNotification(
+      MessageNotification(
+        id: 0,
         title: notification.title,
         body: notification.body,
-      );
-    });
+      ),
+      slideDismissDirection: DismissDirection.up,
+      contentPadding: EdgeInsets.zero,
+      background: Color.fromRGBO(0, 0, 0, 0.4),
+      foreground: Color.fromRGBO(0, 0, 0, 0.4),
+    );
   }
 }
