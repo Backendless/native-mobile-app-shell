@@ -20,6 +20,7 @@ dependencies:
   audioplayers: ^0.20.1
   geolocator: ^8.0.5
   sign_in_with_apple: ^3.3.0
+  google_sign_in: ^5.4.1
   flutter_local_notifications: ^7.0.0
 
 
@@ -38,3 +39,103 @@ flutter:
   fonts:
     - family: CustomAssets
       fonts:
+        - asset: assets/ui_builder_app/styles/fonts/Montserrat/Montserrat-Black.ttf
+        - asset: assets/ui_builder_app/styles/fonts/Montserrat/Montserrat-Bold.ttf
+        - asset: assets/ui_builder_app/styles/fonts/Montserrat/Montserrat-ExtraBold.ttf
+        - asset: assets/ui_builder_app/styles/fonts/Montserrat/Montserrat-Medium.ttf
+        - asset: assets/ui_builder_app/styles/fonts/Montserrat/Montserrat-Regular.ttf
+        - asset: assets/ui_builder_app/styles/fonts/Montserrat/Montserrat-SemiBoldItalic.ttf
+        - asset: assets/ui_builder_app/styles/fonts/Montserrat/Montserrat-Thin.ttf
+        - asset: assets/ui_builder_app/styles/fonts/Montserrat/Montserrat-ThinItalic.ttf
+        - asset: assets/ui_builder_app/styles/fonts/Work_Sans/WorkSans-Bold.ttf
+        - asset: assets/ui_builder_app/styles/img/icons/add-photo.svg
+        - asset: assets/ui_builder_app/styles/img/icons/arrow-black.svg
+        - asset: assets/ui_builder_app/styles/img/icons/arrowUp.svg
+        - asset: assets/ui_builder_app/styles/img/icons/block.svg
+        - asset: assets/ui_builder_app/styles/img/icons/bulb.svg
+        - asset: assets/ui_builder_app/styles/img/icons/calendar.svg
+        - asset: assets/ui_builder_app/styles/img/icons/calendar_gray.svg
+        - asset: assets/ui_builder_app/styles/img/icons/calendar_orange.svg
+        - asset: assets/ui_builder_app/styles/img/icons/calendar_white.svg
+        - asset: assets/ui_builder_app/styles/img/icons/chat.svg
+        - asset: assets/ui_builder_app/styles/img/icons/check.svg
+        - asset: assets/ui_builder_app/styles/img/icons/chevron.svg
+        - asset: assets/ui_builder_app/styles/img/icons/copyright.svg
+        - asset: assets/ui_builder_app/styles/img/icons/delete.svg
+        - asset: assets/ui_builder_app/styles/img/icons/delete_black.svg
+        - asset: assets/ui_builder_app/styles/img/icons/dinner.svg
+        - asset: assets/ui_builder_app/styles/img/icons/dollar.svg
+        - asset: assets/ui_builder_app/styles/img/icons/drag.svg
+        - asset: assets/ui_builder_app/styles/img/icons/filter.svg
+        - asset: assets/ui_builder_app/styles/img/icons/gemini.svg
+        - asset: assets/ui_builder_app/styles/img/icons/interests.svg
+        - asset: assets/ui_builder_app/styles/img/icons/like.svg
+        - asset: assets/ui_builder_app/styles/img/icons/like_white.svg
+        - asset: assets/ui_builder_app/styles/img/icons/lock.svg
+        - asset: assets/ui_builder_app/styles/img/icons/lock_gray.svg
+        - asset: assets/ui_builder_app/styles/img/icons/logoIcon.svg
+        - asset: assets/ui_builder_app/styles/img/icons/logout.svg
+        - asset: assets/ui_builder_app/styles/img/icons/man.svg
+        - asset: assets/ui_builder_app/styles/img/icons/messages.svg
+        - asset: assets/ui_builder_app/styles/img/icons/pause.svg
+        - asset: assets/ui_builder_app/styles/img/icons/pause_white.svg
+        - asset: assets/ui_builder_app/styles/img/icons/photo_gray.svg
+        - asset: assets/ui_builder_app/styles/img/icons/pin.svg
+        - asset: assets/ui_builder_app/styles/img/icons/pin_black.svg
+        - asset: assets/ui_builder_app/styles/img/icons/play.svg
+        - asset: assets/ui_builder_app/styles/img/icons/play2.svg
+        - asset: assets/ui_builder_app/styles/img/icons/profiles.svg
+        - asset: assets/ui_builder_app/styles/img/icons/red-heart.svg
+        - asset: assets/ui_builder_app/styles/img/icons/requests.svg
+        - asset: assets/ui_builder_app/styles/img/icons/search.svg
+        - asset: assets/ui_builder_app/styles/img/icons/Search1.svg
+        - asset: assets/ui_builder_app/styles/img/icons/send.svg
+        - asset: assets/ui_builder_app/styles/img/icons/sent_white.svg
+        - asset: assets/ui_builder_app/styles/img/icons/settings.svg
+        - asset: assets/ui_builder_app/styles/img/icons/user.svg
+        - asset: assets/ui_builder_app/styles/img/icons/user-black.svg
+        - asset: assets/ui_builder_app/styles/img/icons/whiteLogo.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/aquarius.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/aries.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/cancer.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/capricorn.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/gemini.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/leo.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/libra.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/pisces.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/sagittarius.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/scorpio.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/taurus.svg
+        - asset: assets/ui_builder_app/styles/img/zodiac/virgo.svg
+        - asset: assets/ui_builder_app/styles/img/AppleLogo.svg
+        - asset: assets/ui_builder_app/styles/img/arrow.svg
+        - asset: assets/ui_builder_app/styles/img/background-create.svg
+        - asset: assets/ui_builder_app/styles/img/bg1.png
+        - asset: assets/ui_builder_app/styles/img/bg2.png
+        - asset: assets/ui_builder_app/styles/img/bg-create.png
+        - asset: assets/ui_builder_app/styles/img/blink.svg
+        - asset: assets/ui_builder_app/styles/img/create-activity.png
+        - asset: assets/ui_builder_app/styles/img/create-activity1.png
+        - asset: assets/ui_builder_app/styles/img/create-activity-bg.png
+        - asset: assets/ui_builder_app/styles/img/dot.png
+        - asset: assets/ui_builder_app/styles/img/dots.svg
+        - asset: assets/ui_builder_app/styles/img/FacebookLogo.svg
+        - asset: assets/ui_builder_app/styles/img/GoogleLogo.svg
+        - asset: assets/ui_builder_app/styles/img/header-bg.png
+        - asset: assets/ui_builder_app/styles/img/linkedin.svg
+        - asset: assets/ui_builder_app/styles/img/login-bg.png
+        - asset: assets/ui_builder_app/styles/img/logo.png
+        - asset: assets/ui_builder_app/styles/img/logo_accent.png
+        - asset: assets/ui_builder_app/styles/img/logo_accent-light.png
+        - asset: assets/ui_builder_app/styles/img/logo_accent-light.svg
+        - asset: assets/ui_builder_app/styles/img/logoAccentLight.png
+        - asset: assets/ui_builder_app/styles/img/logoAccentLight.svg
+        - asset: assets/ui_builder_app/styles/img/logoLight.svg
+        - asset: assets/ui_builder_app/styles/img/logoMain.svg
+        - asset: assets/ui_builder_app/styles/img/placeholder_photo.png
+        - asset: assets/ui_builder_app/styles/img/prompt-bg.png
+        - asset: assets/ui_builder_app/styles/img/request.jpg
+        - asset: assets/ui_builder_app/styles/img/startQuiz.png
+        - asset: assets/ui_builder_app/styles/img/success.jpg
+        - asset: assets/ui_builder_app/styles/img/twitterLogo.svg
+        - asset: assets/ui_builder_app/styles/logoMain.svg

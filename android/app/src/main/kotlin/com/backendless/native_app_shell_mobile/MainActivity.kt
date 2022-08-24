@@ -1,4 +1,4 @@
-package com.backendless.native_app_shell_mobile
+package com.aloqa.findMyPlusOne
 
 import io.flutter.embedding.android.FlutterActivity
 

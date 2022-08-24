@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:native_app_shell_mobile/src/bridge/bridge_ui_builder_functions.dart';
+
 import 'bridge_manager.dart';
 import 'bridge_validator.dart';
 import 'package:uuid/uuid.dart';
@@ -33,6 +35,9 @@ class Bridge {
                 break;
             }
             if (result!.contains('_CANCELED BY USER')) return;
+
+            if (result.contains('_UNSUPPORTED FOR THIS PLATFORM'))
+              await BridgeUIBuilderFunctions.alertUnsupportedPlatform(context);
 
             await replyProxy.postMessage(result);
           } catch (ex) {

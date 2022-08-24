@@ -2,6 +2,7 @@ import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../types/push_notification_message.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -10,6 +11,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class BridgeUIBuilderFunctions {
+  static const CLIENT_ID_IOS =
+      '1086388651344-cfs64dd7h83b9mjbim7uihntshhima39.apps.googleusercontent.com';
+  static const CLIENT_ID_WEB =
+      '1086388651344-v5rtnkpo1h04kttd5n3vg2ielolj44g2.apps.googleusercontent.com';
   /*static late FlutterLocalNotificationsPlugin _notifications;
   static late AndroidInitializationSettings androidInit;
   static late IOSInitializationSettings iosInit;
@@ -39,6 +44,7 @@ class BridgeUIBuilderFunctions {
   static Future<BackendlessUser?> socialLogin(
       String providerCode, BuildContext context,
       {Map<String, String>? fieldsMappings, List<String>? scope}) async {
+    BackendlessUser? user;
     String? result = await Backendless.userService.getAuthorizationUrlLink(
       providerCode,
       fieldsMappings: fieldsMappings,
@@ -48,66 +54,89 @@ class BridgeUIBuilderFunctions {
     String? userId;
     String? userToken;
 
-    if (result?.isNotEmpty ?? false)
+    if (providerCode == 'googleplus') {
+      GoogleSignIn _googleSignIn = GoogleSignIn(
+        clientId: io.Platform.isIOS ? CLIENT_ID_IOS : CLIENT_ID_WEB,
+        scopes: [
+          'email',
+          'https://www.googleapis.com/auth/plus.login',
+        ],
+      );
+
+      //await _googleSignIn.signOut();
+      var resLog = await _googleSignIn.signIn();
+      var token = (await resLog!.authentication).accessToken;
+
+      user = await Backendless.userService
+          .loginWithOauth2(providerCode, token!, <String, String>{}, false);
+      userId = user!.getUserId();
+
+      if (io.Platform.isAndroid) {
+        userToken = await Backendless.userService.getUserToken();
+        user.setProperty('userToken', userToken);
+      } else {
+        userToken = user.getProperty('userToken');
+      }
+    } else if (result?.isNotEmpty ?? false) {
       await showDialog(
           useSafeArea: true,
           context: context,
           builder: (context) {
-            return AlertDialog(
-              contentPadding: EdgeInsets.zero,
-              content: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: Column(
-                  children: [
-                    Expanded(
-                        child: InAppWebView(
-                            initialUrlRequest: URLRequest(
-                              url: Uri.parse(result!),
-                            ),
-                            initialOptions: InAppWebViewGroupOptions(
-                              crossPlatform: InAppWebViewOptions(
+            return Container(
+              width: MediaQuery.of(context).size.width * 1.2,
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                children: [
+                  Expanded(
+                      child: InAppWebView(
+                          initialUrlRequest: URLRequest(
+                            url: Uri.parse(result!),
+                          ),
+                          initialOptions: InAppWebViewGroupOptions(
+                            crossPlatform: InAppWebViewOptions(
                                 useShouldOverrideUrlLoading: true,
-                                disableHorizontalScroll: false,
+                                disableHorizontalScroll: true,
+                                cacheEnabled: true,
                                 userAgent:
-                                    providerCode != 'facebook' ? 'random' : '',
-                              ),
-                              android: AndroidInAppWebViewOptions(
-                                useHybridComposition: true,
-                                safeBrowsingEnabled: false,
-                              ),
+                                    'Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Mobile/15E148 Safari/604.1'
+                                //providerCode != 'facebook' ? 'random' : '',
+                                ),
+                            android: AndroidInAppWebViewOptions(
+                              useHybridComposition: true,
+                              safeBrowsingEnabled: false,
                             ),
-                            onLoadStop: (controller, url) async {
-                              print('!!! called onLoadStop');
-                              print("AUTH_WEBVIEW: $url");
-                            },
-                            shouldOverrideUrlLoading:
-                                (controller, navigationAction) async {
-                              print('override');
-                              if (navigationAction.request.url
-                                  .toString()
-                                  .contains('userId')) {
-                                userId = navigationAction
-                                    .request.url!.queryParameters['userId'];
-                                userToken = navigationAction
-                                    .request.url!.queryParameters['userToken'];
-                                Navigator.pop(context);
-                              }
-                              return null;
-                            }))
-                  ],
-                ),
+                          ),
+                          onLoadStop: (controller, url) async {
+                            print('!!! called onLoadStop');
+                            print("AUTH_WEBVIEW: $url");
+                          },
+                          shouldOverrideUrlLoading:
+                              (controller, navigationAction) async {
+                            print('override');
+                            print('${navigationAction.request.url}');
+                            if (navigationAction.request.url
+                                .toString()
+                                .contains('userId')) {
+                              userId = navigationAction
+                                  .request.url!.queryParameters['userId'];
+                              userToken = navigationAction
+                                  .request.url!.queryParameters['userToken'];
+                              Navigator.pop(context);
+                            }
+                            return null;
+                          }))
+                ],
               ),
             );
           });
-
-    if (userId != null) {
-      BackendlessUser? user = await Backendless.userService.findById(userId!);
-      user!.setProperty('user-token', userToken);
-      return user;
     }
 
-    return null;
+    if (userId != null && user == null) {
+      user = await Backendless.userService.findById(userId!);
+      user!.setProperty('userToken', userToken);
+    }
+
+    return user;
   }
 
   static void onMessage(Map<String, dynamic> message) async {
@@ -152,6 +181,34 @@ class BridgeUIBuilderFunctions {
       contentPadding: EdgeInsets.zero,
       background: Color.fromRGBO(0, 0, 0, 0.4),
       foreground: Color.fromRGBO(0, 0, 0, 0.4),
+    );
+  }
+
+  static Future<void> alertUnsupportedPlatform(BuildContext context) async {
+    await showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Unsupported for this platform'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'Signing in with an Apple ID is not supported for this platform.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

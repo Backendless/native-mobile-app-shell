@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "690361107122",
-    "project_id": "native-app-shell-mobile",
-    "storage_bucket": "native-app-shell-mobile.appspot.com"
+    "project_number": "1086388651344",
+    "project_id": "findmy-319609",
+    "storage_bucket": "findmy-319609.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:690361107122:android:8f1932c10538d8d4093fab",
+        "mobilesdk_app_id": "1:1086388651344:android:2623e2903c282954f6d855",
         "android_client_info": {
-          "package_name": "com.backendless.native_app_shell_mobile"
+          "package_name": "com.aloqa.findMyPlusOne"
         }
       },
       "oauth_client": [
         {
-          "client_id": "690361107122-3g3s5kosecrpltvat8ecsfdasrg578fs.apps.googleusercontent.com",
+          "client_id": "1086388651344-6iovkhealae9chhdgs63ob6j8pomnevl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDji0h4nf8Dn1VuWHhfLXbrxvn-KFcDjO0"
+          "current_key": "AIzaSyDPrfYu65Qmb26pQI0IbE18OZZgMyG4L4Q"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "690361107122-3g3s5kosecrpltvat8ecsfdasrg578fs.apps.googleusercontent.com",
+              "client_id": "1086388651344-6iovkhealae9chhdgs63ob6j8pomnevl.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1086388651344-cfs64dd7h83b9mjbim7uihntshhima39.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aloqa.findMyPlusOne"
+              }
             }
           ]
         }

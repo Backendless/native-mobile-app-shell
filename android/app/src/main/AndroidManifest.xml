@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.backendless.native_app_shell_mobile">
+    package="com.aloqa.findMyPlusOne">
    <application
-        android:label="native_app_shell_mobile"
+        android:label="FindMy +1"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
         <activity

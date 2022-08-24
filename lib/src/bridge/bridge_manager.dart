@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import '../utils/request_container.dart';
 import '../bridge/bridge_ui_builder_functions.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
@@ -20,7 +21,7 @@ class BridgeManager {
           {
             result =
                 await BridgeUIBuilderFunctions.registerForPushNotifications(
-                    channels: <String>['default']);
+                    channels: <String>['push']);
             if (result == null) throw Exception('Cannot register device');
             return buildResponse(
               data: requestContainer,
@@ -32,6 +33,8 @@ class BridgeManager {
         case _SOCIAL_LOGIN:
           {
             if (data['payload']['options']['providerCode'] == 'apple') {
+              if (Platform.isAndroid)
+                return result = '_UNSUPPORTED FOR THIS PLATFORM';
               final credential = await SignInWithApple.getAppleIDCredential(
                   scopes: [
                     AppleIDAuthorizationScopes.email,
@@ -48,7 +51,13 @@ class BridgeManager {
               result = await BridgeUIBuilderFunctions.socialLogin(
                   data['payload']['options']['providerCode'], data['_context']);
             }
-            if (result == null) result = '_CANCELED BY USER';
+            if (result == null) {
+              result = '_CANCELED BY USER';
+            } /*else {
+              if (result.getProperty('userToken') != null) {
+                requestContainer.userToken = result.getProperty('userToken');
+              }
+            }*/
             return buildResponse(
               data: requestContainer,
               response: result,
