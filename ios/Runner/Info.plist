@@ -91,7 +91,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
     <!-- Google Sign-in Section -->
     <key>CFBundleURLTypes</key>
     <array>
@@ -102,7 +101,7 @@
     		<array>
     			<!-- TODO Replace this value: -->
     			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
-    			<string>com.googleusercontent.apps.1086388651344-cfs64dd7h83b9mjbim7uihntshhima39</string>
+    			<string>com.googleusercontent.apps.xxxxxxxxxxxxxxxxx</string>
     		</array>
     	</dict>
     </array>

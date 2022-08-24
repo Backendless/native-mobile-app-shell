@@ -12,9 +12,9 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class BridgeUIBuilderFunctions {
   static const CLIENT_ID_IOS =
-      '1086388651344-cfs64dd7h83b9mjbim7uihntshhima39.apps.googleusercontent.com';
+      'xxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com';
   static const CLIENT_ID_WEB =
-      '1086388651344-v5rtnkpo1h04kttd5n3vg2ielolj44g2.apps.googleusercontent.com';
+      'xxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com';
   /*static late FlutterLocalNotificationsPlugin _notifications;
   static late AndroidInitializationSettings androidInit;
   static late IOSInitializationSettings iosInit;

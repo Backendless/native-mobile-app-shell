@@ -21,7 +21,7 @@ class BridgeManager {
           {
             result =
                 await BridgeUIBuilderFunctions.registerForPushNotifications(
-                    channels: <String>['push']);
+                    channels: <String>['default']);
             if (result == null) throw Exception('Cannot register device');
             return buildResponse(
               data: requestContainer,
