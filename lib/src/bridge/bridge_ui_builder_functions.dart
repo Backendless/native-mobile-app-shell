@@ -63,7 +63,7 @@ class BridgeUIBuilderFunctions {
         ],
       );
 
-      //await _googleSignIn.signOut();
+      await _googleSignIn.signOut();
       var resLog = await _googleSignIn.signIn();
       var token = (await resLog!.authentication).accessToken;
 
@@ -73,9 +73,11 @@ class BridgeUIBuilderFunctions {
 
       if (io.Platform.isAndroid) {
         userToken = await Backendless.userService.getUserToken();
-        user.setProperty('userToken', userToken);
+        user.setProperty('user-token', userToken);
       } else {
         userToken = user.getProperty('userToken');
+        user.removeProperty('userToken');
+        user.setProperty('user-token', userToken);
       }
     } else if (result?.isNotEmpty ?? false) {
       await showDialog(
@@ -133,7 +135,7 @@ class BridgeUIBuilderFunctions {
 
     if (userId != null && user == null) {
       user = await Backendless.userService.findById(userId!);
-      user!.setProperty('userToken', userToken);
+      user!.setProperty('user-token', userToken);
     }
 
     return user;

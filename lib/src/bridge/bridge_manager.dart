@@ -53,11 +53,8 @@ class BridgeManager {
             }
             if (result == null) {
               result = '_CANCELED BY USER';
-            } /*else {
-              if (result.getProperty('userToken') != null) {
-                requestContainer.userToken = result.getProperty('userToken');
-              }
-            }*/
+            }
+
             return buildResponse(
               data: requestContainer,
               response: result,
@@ -83,7 +80,6 @@ class BridgeManager {
       'payload': <String?, dynamic>{
         'type': data.operations,
         'id': data.id,
-        'userToken': data.userToken
       }
     };
 
