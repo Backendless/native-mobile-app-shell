@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../utils/request_container.dart';
 import '../bridge/bridge_ui_builder_functions.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
@@ -7,8 +9,12 @@ import 'package:native_app_shell_mobile/src/utils/coder.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class BridgeManager {
+  static const String _GET_CURRENT_LOCATION = 'GET_CURRENT_LOCATION';
   static const String _OPERATION_REGISTER_DEVICE = 'REGISTER_DEVICE';
   static const String _SOCIAL_LOGIN = 'SOCIAL_LOGIN';
+  static const String _GET_RUNNING_ENV = 'GET_RUNNING_ENV';
+  static const String _REQUEST_CAMERA_PERMISSIONS =
+      'REQUEST_CAMERA_PERMISSIONS';
 
   static Future<String> executeRequest(Map data) async {
     final requestContainer =
@@ -17,8 +23,21 @@ class BridgeManager {
     try {
       var result;
       switch (requestContainer.operations) {
+        case _GET_CURRENT_LOCATION:
+          {
+            try {
+              result = await BridgeUIBuilderFunctions.getCurrentLocation();
+            } catch (ex) {
+              return buildResponse(
+                  data: requestContainer, response: null, error: ex.toString());
+            }
+
+            return buildResponse(data: requestContainer, response: result);
+          }
         case _OPERATION_REGISTER_DEVICE:
           {
+            await Permission.notification.request();
+
             result =
                 await BridgeUIBuilderFunctions.registerForPushNotifications(
                     channels: <String>['default']);
@@ -60,6 +79,20 @@ class BridgeManager {
               response: result,
             );
           }
+        case _GET_RUNNING_ENV:
+          {
+            return buildResponse(
+                data: requestContainer, response: 'NATIVE_SHELL');
+          }
+        case _REQUEST_CAMERA_PERMISSIONS:
+          {
+            await Permission.camera.request();
+
+            return buildResponse(
+              data: requestContainer,
+              response: true,
+            );
+          }
       }
       throw Exception(
           'Flutter error in bridge logic. Unknown operation type or something else.');
@@ -86,7 +119,12 @@ class BridgeManager {
     if (response != null) {
       if (response is BackendlessUser)
         finalResult['payload']['result'] = response.toJson();
-      else
+      else if (response is Position) {
+        finalResult['payload']['result'] = <String, double>{
+          'lat': response.latitude,
+          'lng': response.longitude,
+        };
+      } else
         finalResult['payload']['result'] = response;
     } else
       finalResult['payload']['error'] = error;

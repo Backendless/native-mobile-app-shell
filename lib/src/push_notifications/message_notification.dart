@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'border_constructor.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 /*class NotificationsApi {
   static Future showNotification({

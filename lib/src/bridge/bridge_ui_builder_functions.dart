@@ -1,28 +1,21 @@
 import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../types/push_notification_message.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:overlay_support/overlay_support.dart';
 import '../push_notifications/message_notification.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import '../utils/geo_controller.dart';
 
 class BridgeUIBuilderFunctions {
-  static const CLIENT_ID_IOS =
-      'xxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com';
-  static const CLIENT_ID_WEB =
-      'xxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com';
-  /*static late FlutterLocalNotificationsPlugin _notifications;
-  static late AndroidInitializationSettings androidInit;
-  static late IOSInitializationSettings iosInit;
-  static late InitializationSettings initSetting;
-  static late AndroidNotificationDetails androidDetails;
-  static late IOSNotificationDetails iosDetails;
-  static late NotificationDetails generalNotificationDetails;
-  static bool isInitialized = false;*/
+  static const GOOGLE_CLIENT_ID_IOS = 'xxxxxx.apps.googleusercontent.com';
+  static const GOOGLE_CLIENT_ID_WEB = 'xxxxxx.apps.googleusercontent.com';
+
+  static late LocationPermission permission;
 
   static Future<dynamic> registerForPushNotifications(
       {List<String>? channels}) async {
@@ -45,30 +38,41 @@ class BridgeUIBuilderFunctions {
       String providerCode, BuildContext context,
       {Map<String, String>? fieldsMappings, List<String>? scope}) async {
     BackendlessUser? user;
-    String? result = await Backendless.userService.getAuthorizationUrlLink(
-      providerCode,
-      fieldsMappings: fieldsMappings,
-      scope: scope,
-    );
-
     String? userId;
     String? userToken;
 
-    if (providerCode == 'googleplus') {
-      GoogleSignIn _googleSignIn = GoogleSignIn(
-        clientId: io.Platform.isIOS ? CLIENT_ID_IOS : CLIENT_ID_WEB,
-        scopes: [
-          'email',
-          'https://www.googleapis.com/auth/plus.login',
-        ],
-      );
+    await Backendless.userService.logout();
 
-      await _googleSignIn.signOut();
-      var resLog = await _googleSignIn.signIn();
-      var token = (await resLog!.authentication).accessToken;
+    if (providerCode == 'googleplus' || providerCode == 'facebook') {
+      String? token;
+      if (providerCode == 'googleplus') {
+        GoogleSignIn _googleSignIn = GoogleSignIn(
+          clientId:
+              io.Platform.isIOS ? GOOGLE_CLIENT_ID_IOS : GOOGLE_CLIENT_ID_WEB,
+          scopes: [
+            'email',
+            'https://www.googleapis.com/auth/plus.login',
+          ],
+        );
+
+        await _googleSignIn.signOut();
+        var resLog = await _googleSignIn.signIn();
+        token = (await resLog!.authentication).accessToken;
+      }
+
+      if (providerCode == 'facebook') {
+        await FacebookAuth.instance.logOut();
+        final LoginResult fbResult = await FacebookAuth.instance.login();
+        if (fbResult.status == LoginStatus.success) {
+          token = fbResult.accessToken!.token;
+        } else {
+          print(fbResult.status);
+          print(fbResult.message);
+        }
+      }
 
       user = await Backendless.userService
-          .loginWithOauth2(providerCode, token!, <String, String>{}, false);
+          .loginWithOauth2(providerCode, token!, <String, String>{}, true);
       userId = user!.getUserId();
 
       if (io.Platform.isAndroid) {
@@ -79,7 +83,14 @@ class BridgeUIBuilderFunctions {
         user.removeProperty('userToken');
         user.setProperty('user-token', userToken);
       }
-    } else if (result?.isNotEmpty ?? false) {
+    } else {
+      await Backendless.userService.logout();
+      String? result = await Backendless.userService.getAuthorizationUrlLink(
+        providerCode,
+        fieldsMappings: fieldsMappings,
+        scope: scope,
+      );
+
       await showDialog(
           useSafeArea: true,
           context: context,
@@ -141,25 +152,30 @@ class BridgeUIBuilderFunctions {
     return user;
   }
 
-  static void onMessage(Map<String, dynamic> message) async {
-    /*if (!isInitialized) {
-      androidInit =
-          AndroidInitializationSettings('backendless_logo'); //for logo
-      iosInit = IOSInitializationSettings();
-      initSetting = InitializationSettings(android: androidInit, iOS: iosInit);
-      _notifications = FlutterLocalNotificationsPlugin();
-      await _notifications.initialize(initSetting);
-      androidDetails =
-          AndroidNotificationDetails('1', 'channelName', 'channel Description');
-      iosDetails = IOSNotificationDetails();
-      generalNotificationDetails =
-          NotificationDetails(android: androidDetails, iOS: iosDetails);
-      isInitialized = true;
+  static Future<Position?> getCurrentLocation() async {
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
     }
 
-    await _notifications.show(0, message['android-content-title'],
-        message['message'], generalNotificationDetails);
-        */
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await GeoController.getCurrentLocation();
+  }
+
+  static void onMessage(Map<String, dynamic> message) async {
     AudioCache pushSound = AudioCache();
     pushSound.play('notification_sounds/push_sound.wav');
     PushNotificationMessage notification = PushNotificationMessage();

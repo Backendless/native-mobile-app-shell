@@ -1,6 +1,7 @@
 import 'dart:io' as io;
 import 'package:native_app_shell_mobile/src/web_view/build_child_web_view.dart';
 
+import '../utils/geo_controller.dart';
 import '/configurator.dart';
 import '../bridge/bridge.dart';
 import 'package:flutter/material.dart';
@@ -263,12 +264,6 @@ class _WebViewContainerState extends State<WebViewContainer> {
     }
   }
 
-  void _geoInit() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    await Geolocator.requestPermission();
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  }
-
   Future setBridge(BuildContext context) async {
     if (!io.Platform.isAndroid ||
         await AndroidWebViewFeature.isFeatureSupported(
@@ -286,7 +281,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
   }
 
   void _configureWebView() {
-    if (AppConfigurator.USE_GEOLOCATION) _geoInit();
+    if (AppConfigurator.USE_GEOLOCATION) GeoController.geoInit();
 
     if (AppConfigurator.REGISTER_FOR_PUSH_NOTIFICATIONS_ON_RUN) {
       BridgeUIBuilderFunctions.registerForPushNotifications();
