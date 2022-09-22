@@ -11,8 +11,7 @@ class GeoController {
     var temp = await Geolocator.getLocationAccuracy();
 
     try {
-      return await Geolocator.getCurrentPosition(
-          timeLimit: Duration(seconds: 5));
+      return await Geolocator.getCurrentPosition();
     } catch (ex) {
       print('Timeout in getCurrentPosition method');
       return null;
