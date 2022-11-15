@@ -45,8 +45,7 @@ After that, your application will be ready for testing.
 ## Build for Release
 #### Note:
 ```diff
-- The changes described below are specifically to build your app for release into the app stores.
-- Once the changes are made, you will not be able to run your application in the debug (Android) mode.
+- The changes described below are specifically to build your app for release into the app store and google play.
 - Before proceeding to this section of preparing your application, we recommend that you thoroughly test 
 - the application in preparation for the release.
 ```
