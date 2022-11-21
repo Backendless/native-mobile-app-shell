@@ -124,11 +124,11 @@ class BridgeManager {
           }
         case _REQUEST_CAMERA_PERMISSIONS:
           {
-            await Permission.camera.request();
+            var permissionsResult = await Permission.camera.request();
 
             return buildResponse(
               data: requestContainer,
-              response: true,
+              response: permissionsResult.name,
             );
           }
       }
