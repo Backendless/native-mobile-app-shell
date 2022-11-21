@@ -10,12 +10,23 @@ import '../push_notifications/message_notification.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import '../utils/geo_controller.dart';
+import 'bridge_event.dart';
 
 class BridgeUIBuilderFunctions {
   static const GOOGLE_CLIENT_ID_IOS = 'xxxxxx.apps.googleusercontent.com';
   static const GOOGLE_CLIENT_ID_WEB = 'xxxxxx.apps.googleusercontent.com';
 
   static late LocationPermission permission;
+
+  static Future<void> addListener(BridgeEvent event) async {
+    if (event.isExist) throw Exception('Event with same id already exists');
+
+    BridgeEvent.addToContainer(event);
+  }
+
+  static Future<bool> removeListener(String name, String id) async {
+    return BridgeEvent.removeEvent(name, id);
+  }
 
   static Future<dynamic> registerForPushNotifications(
       {List<String>? channels}) async {

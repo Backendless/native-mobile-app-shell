@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.aloqa.findMyPlusOne">
+    package="com.backendless.native_app_shell">
    <application
         android:label="native app shell"
         android:icon="@mipmap/ic_launcher"
@@ -46,10 +46,10 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <intent-filter>
-                <action android:name="FLUTTER_NOTIFICATION_CLICK"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
+<!--            <intent-filter>-->
+<!--                <action android:name="FLUTTER_NOTIFICATION_CLICK"/>-->
+<!--                <category android:name="android.intent.category.DEFAULT"/>-->
+<!--            </intent-filter>-->
         </activity>
        <service android:name="com.backendless.backendless_sdk.common.FlutterBackendlessFCMService"
            android:exported="true">
@@ -78,6 +78,9 @@
 <!--               <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>-->
 <!--           </intent-filter>-->
 <!--       </receiver>-->
+       <meta-data
+           android:name="com.google.firebase.messaging.default_notification_channel_id"
+           android:value="high_importance_channel" />
     </application>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -95,7 +98,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
+    <uses-permission android:name="android.permission.BACKGROUND_SERVICE"/>
     <queries>
         <!-- Place inside the <queries> element. -->
         <intent>

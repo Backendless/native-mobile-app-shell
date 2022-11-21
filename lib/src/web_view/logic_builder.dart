@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../web_view/web_view_container.dart';
 import 'package:overlay_support/overlay_support.dart';
 
+GlobalKey<NavigatorState> navigatorKeyT = GlobalKey<NavigatorState>();
+
 class StartPageStateless extends StatelessWidget {
   //TODO Set path to your 'index.html' file!
   final syncPath = 'assets/ui_builder_app/index.html';
@@ -11,6 +13,7 @@ class StartPageStateless extends StatelessWidget {
     return OverlaySupport.global(
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
+          navigatorKey: navigatorKeyT,
           home: isExists() ? WebViewContainer(syncPath) : StartPageStateful()),
     );
   }

@@ -3,11 +3,39 @@ import Flutter
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
+    private var controller : FlutterViewController?
+    private var pushChannel: FlutterMethodChannel?
+
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+        controller = window?.rootViewController as? FlutterViewController
+        pushChannel = FlutterMethodChannel(
+          name: "backendless/push_notifications",
+          binaryMessenger: controller!.binaryMessenger)
+
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+      print("Received push notification:")
+      for (key, value) in userInfo {
+          print("* \(key): \(value)")
+      }
+
+      let state = UIApplication.shared.applicationState
+
+      if state == .active
+      {
+        print("___ACTIVE")
+      }
+      else if state == .inactive {
+        print("INACTIVE")
+          pushChannel?.invokeMethod("onTapPushAction", arguments: nil)
+      }
+
+      completionHandler(.newData)
   }
 }

@@ -27,36 +27,29 @@ class Bridge {
                 await BridgeValidator.hasSystemEvent(data['event']);
             switch (systemEvent) {
               case SystemEvents.REQUEST:
-                result = await BridgeManager.executeRequest(data);
+                result = await BridgeManager.executeRequest(
+                  data,
+                  replyProxy,
+                );
                 break;
               case SystemEvents.RESPONSE:
-                break;
+                print('RESPONSE CALLED');
+                return;
               default:
                 break;
             }
-            if (result!.contains('_CANCELED BY USER')) return;
+            if (result!.contains('_CANCELED BY USER')) {
+              return;
+            }
 
-            if (result.contains('_UNSUPPORTED FOR THIS PLATFORM'))
+            if (result.contains('_UNSUPPORTED FOR THIS PLATFORM')) {
               await BridgeUIBuilderFunctions.alertUnsupportedPlatform(context);
+            } else if (result.contains('\"type\":\"ADD_LISTENER\"')) {}
 
             await replyProxy.postMessage(result);
           } catch (ex) {
             throw Exception(ex);
           }
         }));
-  }
-
-  Future dispatchEvent({required String type, required Map body}) async {
-    //TODO: add id
-    var uuid = Uuid();
-    body['id'] = uuid.v5('', type);
-    if (!body['id']) {
-      throw new Exception('The body does not have\'id\' value');
-    }
-    String jsonBody = json.encode(body);
-    await this.controller.evaluateJavascript(source: """
-      window.dispatchEvent(new CustomEvent($type, {
-        detail: $jsonBody}))
-    """);
   }
 }

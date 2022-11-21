@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1086388651344:android:2623e2903c282954f6d855",
         "android_client_info": {
-          "package_name": "com.aloqa.findMyPlusOne"
+          "package_name": "com.backendless.native_app_shell"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "1086388651344-cfs64dd7h83b9mjbim7uihntshhima39.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.aloqa.findMyPlusOne"
+                "bundle_id": "com.backendless.native_app_shell"
               }
             }
           ]
