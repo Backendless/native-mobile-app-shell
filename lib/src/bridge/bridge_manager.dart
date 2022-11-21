@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../utils/request_container.dart';
@@ -8,7 +9,11 @@ import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:native_app_shell_mobile/src/utils/coder.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
+import 'bridge_event.dart';
+
 class BridgeManager {
+  static const String _ADD_LISTENER = 'ADD_LISTENER';
+  static const String _REMOVE_LISTENER = 'REMOVE_LISTENER';
   static const String _GET_CURRENT_LOCATION = 'GET_CURRENT_LOCATION';
   static const String _OPERATION_REGISTER_DEVICE = 'REGISTER_DEVICE';
   static const String _SOCIAL_LOGIN = 'SOCIAL_LOGIN';
@@ -16,13 +21,46 @@ class BridgeManager {
   static const String _REQUEST_CAMERA_PERMISSIONS =
       'REQUEST_CAMERA_PERMISSIONS';
 
-  static Future<String> executeRequest(Map data) async {
+  static Future<String> executeRequest(
+      Map data, JavaScriptReplyProxy replier) async {
     final requestContainer =
         RequestContainer(data['payload']['id'], data['payload']['type']);
 
     try {
       var result;
       switch (requestContainer.operations) {
+        case _ADD_LISTENER:
+          {
+            try {
+              String eventName = data['payload']['options']['event'];
+              String eventId = data['payload']['options']['id'];
+
+              BridgeEvent event = BridgeEvent(
+                eventId,
+                eventName,
+                replier,
+              );
+
+              await BridgeUIBuilderFunctions.addListener(event);
+              return buildResponse(data: requestContainer, response: result);
+            } catch (ex) {
+              return buildResponse(
+                  data: requestContainer, response: null, error: ex.toString());
+            }
+          }
+        case _REMOVE_LISTENER:
+          {
+            try {
+              String eventName = data['payload']['options']['event'];
+              String eventId = data['payload']['options']['id'];
+
+              await BridgeUIBuilderFunctions.removeListener(eventName, eventId);
+              return buildResponse(data: requestContainer, response: result);
+            } catch (ex) {
+              return buildResponse(
+                  data: requestContainer, response: null, error: ex.toString());
+            }
+          }
         case _GET_CURRENT_LOCATION:
           {
             try {

@@ -1,7 +1,10 @@
 import 'dart:io' as io;
+import 'package:flutter/services.dart';
 import 'package:native_app_shell_mobile/src/web_view/build_child_web_view.dart';
 
+import '../bridge/bridge_event.dart';
 import '../utils/geo_controller.dart';
+import '../utils/initializer.dart';
 import '/configurator.dart';
 import '../bridge/bridge.dart';
 import 'package:flutter/material.dart';
@@ -285,6 +288,35 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
     if (AppConfigurator.REGISTER_FOR_PUSH_NOTIFICATIONS_ON_RUN) {
       BridgeUIBuilderFunctions.registerForPushNotifications();
+    }
+
+    if (io.Platform.isIOS) {
+      ShellInitializer.platform
+          .setMethodCallHandler((call) => nativeEventHandler(call));
+    }
+  }
+
+  ///TODO(This feature is in develop now)
+  Future<dynamic> nativeEventHandler(MethodCall methodCall) async {
+    switch (methodCall.method) {
+      case 'onTapPushAction':
+        print('TEST METHOD 123');
+
+        if (this.manager == null ||
+            BridgeEvent.getEventsByName('onTapPushAction') == null) {
+          return;
+        }
+
+        ///TODO
+        if (!io.Platform.isAndroid ||
+            await AndroidWebViewFeature.isFeatureSupported(
+                AndroidWebViewFeature.POST_WEB_MESSAGE)) {
+          BridgeEvent.dispatchEventsByName('onTapPushAction', {});
+        }
+
+        break;
+      default:
+        print('Just DEFAULT section');
     }
   }
 

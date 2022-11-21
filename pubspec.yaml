@@ -15,7 +15,7 @@ dependencies:
   permission_handler: ^8.1.6
   flutter_inappwebview: ^5.4.3+7
   url_launcher: ^6.0.10
-  backendless_sdk: ^7.2.5
+  backendless_sdk: ^7.2.7
   overlay_support: ^2.0.1
   audioplayers: ^0.20.1
   geolocator: ^8.0.5
