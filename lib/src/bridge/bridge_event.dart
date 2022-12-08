@@ -79,10 +79,12 @@ class BridgeEvent {
   }
 
   get isExist {
-    if (BridgeEvent._eventsContainer?.isNotEmpty ?? false) {
-      for (var event in _eventsContainer![this.eventName]!) {
-        if (this.equalTo(event.id)) {
-          return true;
+    if (_eventsContainer?.isNotEmpty ?? false) {
+      if (_eventsContainer!.containsKey(this.eventName)) {
+        for (var event in _eventsContainer![this.eventName]!) {
+          if (this.equalTo(event.id)) {
+            return true;
+          }
         }
       }
     }
