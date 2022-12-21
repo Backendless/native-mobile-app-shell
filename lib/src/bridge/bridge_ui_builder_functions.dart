@@ -202,7 +202,7 @@ class BridgeUIBuilderFunctions {
       notification.body = message['message'];
     }
 
-    var headers = await createHeadersForOnTapPushAction(message);
+    var headers = await createHeadersForOnTapPushAction();
 
     var notificationMessage = MessageNotification(
       id: 0,

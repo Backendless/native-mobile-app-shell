@@ -1,7 +1,3 @@
-Future<Map> createHeadersForOnTapPushAction(Map message) async {
-  return {
-    'chatId': message['id'],
-    'page': message['page'],
-    'activeTab': message['activeTab']
-  };
+Future<Map> createHeadersForOnTapPushAction() async {
+  return {'mess': 'on tap event is fired'};
 }
