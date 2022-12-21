@@ -10,6 +10,7 @@ import '../push_notifications/message_notification.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import '../utils/geo_controller.dart';
+import '../utils/support_functions.dart';
 import 'bridge_event.dart';
 
 class BridgeUIBuilderFunctions {
@@ -38,8 +39,9 @@ class BridgeUIBuilderFunctions {
       channelsList.add('default');
 
     try {
+      DateTime time = DateTime.now().add(const Duration(days: 15));
       return await Backendless.messaging
-          .registerDevice(channelsList, null, onMessage);
+          .registerDevice(channelsList, time, onMessage);
     } catch (ex) {
       return ex;
     }
@@ -200,17 +202,30 @@ class BridgeUIBuilderFunctions {
       notification.body = message['message'];
     }
 
+    var headers = await createHeadersForOnTapPushAction(message);
+
+    var notificationMessage = MessageNotification(
+      id: 0,
+      title: notification.title,
+      body: notification.body,
+      headers: headers,
+    );
+
     showSimpleNotification(
-      MessageNotification(
-        id: 0,
-        title: notification.title,
-        body: notification.body,
-      ),
+      notificationMessage,
+      key: Key('same_key'),
       slideDismissDirection: DismissDirection.up,
       contentPadding: EdgeInsets.zero,
-      background: Color.fromRGBO(0, 0, 0, 0.4),
-      foreground: Color.fromRGBO(0, 0, 0, 0.4),
+      background: Color.fromRGBO(0, 0, 0, 0.0),
+      foreground: Color.fromRGBO(0, 0, 0, 0.0),
+      elevation: 0.0,
     );
+  }
+
+  static void dispatchTapOnPushEvent(Map headers) {
+    if (BridgeEvent.getEventsByName('onTapPushAction') != null) {
+      BridgeEvent.dispatchEventsByName('onTapPushAction', {'data': headers});
+    }
   }
 
   static Future<void> alertUnsupportedPlatform(BuildContext context) async {

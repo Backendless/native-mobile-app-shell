@@ -9,7 +9,7 @@ class ShellInitializer {
 
   static Future<void> initApp({required String pathToSettings}) async {
     kNotificationSlideDuration = const Duration(milliseconds: 500);
-    kNotificationDuration = const Duration(milliseconds: 4000);
+    kNotificationDuration = const Duration(milliseconds: 7000);
 
     final initData = await Coder.readJson(path: pathToSettings);
 
