@@ -30,10 +30,11 @@ import Flutter
       if state == .active
       {
         print("___ACTIVE")
+        super.application(application, didReceiveRemoteNotification: userInfo, fetchCompletionHandler: completionHandler);
       }
       else if state == .inactive {
         print("INACTIVE")
-          pushChannel?.invokeMethod("onTapPushAction", arguments: nil)
+        pushChannel?.invokeMethod("onTapPushAction", arguments: userInfo)
       }
 
       completionHandler(.newData)

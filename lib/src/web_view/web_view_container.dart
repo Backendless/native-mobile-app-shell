@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 import 'package:flutter/services.dart';
+import 'package:native_app_shell_mobile/src/utils/support_functions.dart';
 import 'package:native_app_shell_mobile/src/web_view/build_child_web_view.dart';
 
 import '../bridge/bridge_event.dart';
@@ -300,11 +301,14 @@ class _WebViewContainerState extends State<WebViewContainer> {
   Future<dynamic> nativeEventHandler(MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'onTapPushAction':
-        print('TEST METHOD 123');
+        print('TEST METHOD ON TAP PUSH');
+        print(methodCall.arguments);
 
-        if (this.manager == null ||
-            BridgeEvent.getEventsByName('onTapPushAction') == null) {
-          return;
+        var headers =
+            await createHeadersForOnTapPushAction(methodCall.arguments);
+
+        if (manager != null) {
+          BridgeUIBuilderFunctions.dispatchTapOnPushEvent(headers);
         }
 
         ///TODO

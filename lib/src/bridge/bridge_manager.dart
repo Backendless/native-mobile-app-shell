@@ -20,6 +20,7 @@ class BridgeManager {
   static const String _GET_RUNNING_ENV = 'GET_RUNNING_ENV';
   static const String _REQUEST_CAMERA_PERMISSIONS =
       'REQUEST_CAMERA_PERMISSIONS';
+  static const String _FIRE_EVENT = 'fireEvent';
 
   static Future<String> executeRequest(
       Map data, JavaScriptReplyProxy replier) async {
@@ -29,6 +30,12 @@ class BridgeManager {
     try {
       var result;
       switch (requestContainer.operations) {
+        case _FIRE_EVENT:
+          {
+            BridgeEvent.dispatchEventsByName(
+                'fooBar', {'mes': 'event was fired'});
+            return buildResponse(data: requestContainer, response: result);
+          }
         case _ADD_LISTENER:
           {
             try {
