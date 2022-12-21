@@ -304,8 +304,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
         print('TEST METHOD ON TAP PUSH');
         print(methodCall.arguments);
 
-        var headers =
-            await createHeadersForOnTapPushAction(methodCall.arguments);
+        var headers = await createHeadersForOnTapPushAction();
 
         if (manager != null) {
           BridgeUIBuilderFunctions.dispatchTapOnPushEvent(headers);
