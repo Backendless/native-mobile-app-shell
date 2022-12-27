@@ -24,17 +24,15 @@ This repository contains the project to build a native app shell for your UI Bui
    6.1. If you want to use some custom fonts or icons, you need to declare that in your `pubspec.yaml` file.
         You can find out how to do this [here](https://flutter.dev/docs/cookbook/design/fonts).
    
-   6.2. If you are using custom or reusable components, then you need to include them in the list of assets in the `pubspec.yaml` file. 
-        For example you have 1 reusable component:
-        
-      <img width="428" alt="Screenshot 2022-03-14 at 14 10 19" src="https://user-images.githubusercontent.com/50683634/158171416-81dec155-c49a-4661-a992-fec413ff4304.png">
+   6.2. If you are using custom or reusable components, make sure they don't use custom styles/images etc. If they are used, indicate this in the `pubspec.yaml` file.:
+     
+      Add the following line to the assets of the `pubspec.yaml` file like this:
+      <img width="600" alt="Screenshot 2022-12-27 at 14 50 50" src="https://user-images.githubusercontent.com/50683634/209670256-d577d89d-b1b3-4d93-9bec-0613b0627407.png">
 
-      So that everything works correctly, add the following line to the assets of the `pubspec.yaml` file like this:
-
-      <img width="695" alt="Screenshot 2022-03-14 at 14 28 24" src="https://user-images.githubusercontent.com/50683634/158173709-a92092f2-2347-4679-b43b-d309d57b4ea6.png">
+      
 ### Important: 
 ```diff
-- Flutter ignores all subfolders, so if there are subfolders in reusable components, styles, etc., they must be specified.
+- Flutter ignores all subfolders, so if there are subfolders, styles, etc., they must be specified.
 ```
 
 7. For iOS, create a team at https://developer.apple.com and set Bundle Identifier [more details](https://docs.flutter.dev/deployment/ios):
@@ -121,6 +119,6 @@ https://docs.flutter.dev/deployment/ios
 Additional information for Android:
 https://docs.flutter.dev/deployment/android
 
-If you have a question, you can ask it here:
+If you have some questions and suggestions to improve our product you can write here:
 - [Our support forum](https://support.backendless.com)
 - [Our slack](http://slack.backendless.com)
