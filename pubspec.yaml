@@ -34,6 +34,9 @@ flutter:
     - assets/notification_sounds/push_sound.wav
     - assets/ui_builder_app/
     - assets/ui_builder_app/library/sdk/
+    - assets/ui_builder_app/libs/less/
+    - assets/ui_builder_app/libs/material-ui-icons/
+    - assets/ui_builder_app/libs/require/
 
   fonts:
     - family: CustomAssets
