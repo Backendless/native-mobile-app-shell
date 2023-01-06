@@ -147,10 +147,10 @@ class _WebViewContainerState extends State<WebViewContainer> {
                 "javascript",
                 "about"
               ].contains(uri.scheme)) {
-                if (await canLaunch(uri.toString())) {
+                if (await canLaunchUrl(uri)) {
                   // Launch the App
-                  await launch(
-                    uri.toString(),
+                  await launchUrl(
+                    uri,
                   );
                   // and cancel the request
                   return NavigationActionPolicy.CANCEL;
