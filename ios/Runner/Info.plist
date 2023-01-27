@@ -42,7 +42,9 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FacebookAppID</key>
-	<string>2992193154355532</string>
+	<string>xxx</string>
+	<key>FacebookClientToken</key>
+    <string>fxxx</string>
 	<key>FacebookDisplayName</key>
 	<string>native app shell</string>
 	<key>LSApplicationQueriesSchemes</key>

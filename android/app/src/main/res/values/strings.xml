@@ -3,4 +3,5 @@
     <string name="app_name">FindMy +1</string>
     <string name="facebook_app_id">xxx</string>
     <string name="fb_login_protocol_scheme">fbxxx</string>
+    <string name="facebook_client_token">YOUR_CLIENT_TOKEN</string>
 </resources>
