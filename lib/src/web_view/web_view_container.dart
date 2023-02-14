@@ -2,14 +2,13 @@ import 'dart:io' as io;
 import 'package:flutter/services.dart';
 import 'package:native_app_shell_mobile/src/utils/support_functions.dart';
 import 'package:native_app_shell_mobile/src/web_view/build_child_web_view.dart';
-
+import 'package:uni_links/uni_links.dart';
 import '../bridge/bridge_event.dart';
 import '../utils/geo_controller.dart';
 import '../utils/initializer.dart';
 import '/configurator.dart';
 import '../bridge/bridge.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../bridge/bridge_ui_builder_functions.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -28,6 +27,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
   final _key = UniqueKey();
 
   String? syncPath;
+  String? initLink;
 
   InAppWebViewController? webViewController;
   InAppWebViewGroupOptions? options;
@@ -62,13 +62,42 @@ class _WebViewContainerState extends State<WebViewContainer> {
         disallowOverScroll: true,
       ),
     );
-
     _configureWebView();
+    initLinkURL();
+  }
+
+  Future<void> initLinkURL() async {
+    initLink = await getInitialLink();
+
+    linkStream.listen((link) {
+      _openSpecificPage(fullLink: link);
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  // TODO: This method is general template with logic that implements opening page from Deep Link.
+  // If you want to specify your own logic you need to rewrite this method.
+  Future<void> _openSpecificPage({String? fullLink, String? query}) async {
+    if (fullLink != null || query != null) {
+      var url = (await webViewController!.getUrl()).toString();
+
+      if (!url.endsWith('index.html')) {
+        url = url.substring(0, url.indexOf('index.html') + 10);
+      }
+
+      var resultQuery = query;
+
+      if (resultQuery == null) {
+        resultQuery = fullLink!.substring(fullLink.indexOf('?'));
+      }
+
+      URLRequest urlRequest = URLRequest(url: Uri.parse(url + resultQuery));
+      await webViewController!.loadUrl(urlRequest: urlRequest);
+    }
   }
 
   @override
@@ -87,6 +116,11 @@ class _WebViewContainerState extends State<WebViewContainer> {
               await setBridge(context);
 
               await controller.loadFile(assetFilePath: syncPath!);
+
+              if (initLink != null) {
+                await _openSpecificPage(fullLink: initLink);
+                initLink = null;
+              }
             },
             androidOnPermissionRequest: (InAppWebViewController controller,
                 String origin, List<String> resources) async {
@@ -250,6 +284,14 @@ class _WebViewContainerState extends State<WebViewContainer> {
             },
             onPrint: (controller, url) {
               print('onPrint event: $url');
+            },
+            iosOnWebContentProcessDidTerminate: (controller) async {
+              print('reload IOS');
+              await controller.reload();
+            },
+            androidOnRenderProcessGone: (controller, detail) async {
+              print('reload Android');
+              await controller.reload();
             },
           ),
         ),

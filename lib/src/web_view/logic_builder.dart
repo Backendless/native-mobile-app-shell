@@ -6,20 +6,17 @@ GlobalKey<NavigatorState> navigatorKeyT = GlobalKey<NavigatorState>();
 
 class StartPageStateless extends StatelessWidget {
   //TODO Set path to your 'index.html' file!
-  final syncPath = 'assets/ui_builder_app/index.html';
+  static final syncPath = 'assets/ui_builder_app/index.html';
 
   @override
   Widget build(BuildContext context) {
     return OverlaySupport.global(
       child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          navigatorKey: navigatorKeyT,
-          home: isExists() ? WebViewContainer(syncPath) : StartPageStateful()),
+        debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKeyT,
+        home: isExists() ? WebViewContainer(syncPath) : StartPageStateful(),
+      ),
     );
-  }
-
-  bool isExists() {
-    return syncPath.contains('/index.html');
   }
 }
 
@@ -75,4 +72,8 @@ class _StartPageStatefulState extends State<StartPageStateful> {
       ),
     );
   }
+}
+
+bool isExists() {
+  return StartPageStateless.syncPath.contains('/index.html');
 }
