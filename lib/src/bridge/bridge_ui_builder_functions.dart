@@ -97,7 +97,6 @@ class BridgeUIBuilderFunctions {
         user.setProperty('user-token', userToken);
       }
     } else {
-      await Backendless.userService.logout();
       String? result = await Backendless.userService.getAuthorizationUrlLink(
         providerCode,
         fieldsMappings: fieldsMappings,
@@ -158,6 +157,11 @@ class BridgeUIBuilderFunctions {
     }
 
     if (userId != null && user == null) {
+      user = BackendlessUser()..setProperty('objectId', userId);
+
+      await Backendless.userService.setCurrentUser(user);
+      await Backendless.userService.setUserToken(userToken!);
+
       user = await Backendless.userService.findById(userId!);
       user!.setProperty('user-token', userToken);
     }
