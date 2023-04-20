@@ -88,7 +88,6 @@ class _WebViewContainerState extends State<WebViewContainer> {
       if (!url.endsWith('index.html')) {
         url = url.substring(0, url.indexOf('index.html') + 10);
       }
-
       var resultQuery = query;
 
       if (resultQuery == null) {
