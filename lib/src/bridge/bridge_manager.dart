@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../utils/request_container.dart';
 import '../bridge/bridge_ui_builder_functions.dart';
@@ -21,6 +22,7 @@ class BridgeManager {
   static const String _GET_RUNNING_ENV = 'GET_RUNNING_ENV';
   static const String _REQUEST_CAMERA_PERMISSIONS =
       'REQUEST_CAMERA_PERMISSIONS';
+  static const String _SHARE_SHEET_REQUEST = 'SHARE_SHEET_REQUEST';
 
   static Future<String> executeRequest(
       Map data, JavaScriptReplyProxy replier) async {
@@ -72,6 +74,23 @@ class BridgeManager {
             }
 
             return buildResponse(data: requestContainer, response: result);
+          }
+        case _SHARE_SHEET_REQUEST:
+          {
+            String? message = data['payload']['options']['message'];
+            String? resourceName = data['payload']['options']['resourceName'];
+            String? link = data['payload']['options']['link'];
+
+            if (link?.isNotEmpty ?? false) {
+              if (message != null) {
+                link = '$message\n$link';
+              }
+
+              await Share.share(link!, subject: resourceName);
+              return buildResponse(data: requestContainer, response: null);
+            }
+
+            throw Exception('Link to share cannot be null');
           }
         case _OPERATION_REGISTER_DEVICE:
           {
