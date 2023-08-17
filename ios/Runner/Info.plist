@@ -23,28 +23,28 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>FlutterDeepLinkingEnabled</key>
-    <true/>
+	<true/>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-    		<key>CFBundleURLSchemes</key>
-    		<array>
-    			<string>fbxxxxxxx</string>
-    		</array>
-    	</dict>
-	    <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLIconFile</key>
-            <string></string>
-            <key>CFBundleURLName</key>
-            <string>your.domain.com</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>https</string>
-                <string>yourScheme</string>
-            </array>
-        </dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fbxxxxxxx</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLIconFile</key>
+			<string></string>
+			<key>CFBundleURLName</key>
+			<string>your.domain.com</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>https</string>
+				<string>yourScheme</string>
+			</array>
+		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -87,7 +87,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Camera permission is required to scan QR codes.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>contacts</string>
+	<string>This app requires contacts access to function properly.</string>
 	<key>NSDocumentsFolderUsageDescription</key>
 	<string>To access device files for upload upon user request</string>
 	<key>NSFileProviderPresenceUsageDescription</key>

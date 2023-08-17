@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -23,6 +24,7 @@ class BridgeManager {
   static const String _REQUEST_CAMERA_PERMISSIONS =
       'REQUEST_CAMERA_PERMISSIONS';
   static const String _SHARE_SHEET_REQUEST = 'SHARE_SHEET_REQUEST';
+  static const String _GET_CONTACTS_LIST = 'GET_CONTACTS_LIST';
 
   static Future<String> executeRequest(
       Map data, JavaScriptReplyProxy replier) async {
@@ -68,12 +70,23 @@ class BridgeManager {
           {
             try {
               result = await BridgeUIBuilderFunctions.getCurrentLocation();
+
+              return buildResponse(data: requestContainer, response: result);
             } catch (ex) {
               return buildResponse(
                   data: requestContainer, response: null, error: ex.toString());
             }
+          }
+        case _GET_CONTACTS_LIST:
+          {
+            try {
+              result = await BridgeUIBuilderFunctions.getContactList();
 
-            return buildResponse(data: requestContainer, response: result);
+              return buildResponse(data: requestContainer, response: result);
+            } catch (ex) {
+              return buildResponse(
+                  data: requestContainer, response: null, error: ex.toString());
+            }
           }
         case _SHARE_SHEET_REQUEST:
           {
@@ -182,10 +195,20 @@ class BridgeManager {
           'lat': response.latitude,
           'lng': response.longitude,
         };
+      } else if (response is List) {
+        if (response.isNotEmpty && response[0] is Contact) {
+          finalResult['payload']['result'] = List.empty(growable: true);
+
+          response.forEach((element) {
+            Map mappedElement = element.toMap();
+            (finalResult['payload']['result'] as List).add(mappedElement);
+          });
+        } else {
+          finalResult['payload']['result'] = response;
+        }
       } else
         finalResult['payload']['result'] = response;
-    } else
-      finalResult['payload']['error'] = error;
+    } else if (error != null) finalResult['payload']['error'] = error;
 
     try {
       return json.encode(

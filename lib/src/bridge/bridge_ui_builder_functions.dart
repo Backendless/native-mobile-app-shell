@@ -1,17 +1,20 @@
 import 'dart:io' as io;
+import 'package:native_app_shell_mobile/src/utils/contacts_controller.dart';
+
+import 'bridge_event.dart';
+import '../utils/geo_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
+import '../utils/support_functions.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../types/push_notification_message.dart';
-import 'package:backendless_sdk/backendless_sdk.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:backendless_sdk/backendless_sdk.dart';
+import 'package:contacts_service/contacts_service.dart';
 import '../push_notifications/message_notification.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import '../utils/geo_controller.dart';
-import '../utils/support_functions.dart';
-import 'bridge_event.dart';
 
 class BridgeUIBuilderFunctions {
   static const GOOGLE_CLIENT_ID_IOS = 'xxxxxx.apps.googleusercontent.com';
@@ -190,6 +193,12 @@ class BridgeUIBuilderFunctions {
     }
 
     return await GeoController.getCurrentLocation();
+  }
+
+  static Future<List<Contact>?> getContactList() async {
+    var contactsList = await ContactsController.getContactsList();
+
+    return contactsList;
   }
 
   static void onMessage(Map<String, dynamic> message) async {

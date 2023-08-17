@@ -1,9 +1,11 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:native_app_shell_mobile/src/utils/permissions_controller.dart';
 
 class GeoController {
   static Future<void> geoInit() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    await Geolocator.requestPermission();
+    LocationPermission permission =
+        await PermissionsController.checkGeolocationPermissions();
+    await PermissionsController.requestGeolocationPermissions();
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
 
