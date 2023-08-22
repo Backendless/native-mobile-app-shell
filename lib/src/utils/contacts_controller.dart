@@ -1,5 +1,5 @@
 import 'package:contacts_service/contacts_service.dart';
-import 'package:native_app_shell_mobile/src/utils/permissions_controller.dart';
+import '../utils/permissions_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ContactsController {

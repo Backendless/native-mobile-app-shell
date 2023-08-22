@@ -1,5 +1,5 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:native_app_shell_mobile/src/utils/permissions_controller.dart';
+import '../utils/permissions_controller.dart';
 
 class GeoController {
   static Future<void> geoInit() async {

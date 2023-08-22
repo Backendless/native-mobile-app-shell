@@ -1,7 +1,7 @@
 import 'dart:io' as io;
 import 'package:flutter/services.dart';
-import 'package:native_app_shell_mobile/src/utils/support_functions.dart';
-import 'package:native_app_shell_mobile/src/web_view/build_child_web_view.dart';
+import '../utils/support_functions.dart';
+import '../web_view/build_child_web_view.dart';
 import 'package:uni_links/uni_links.dart';
 import '../bridge/bridge_event.dart';
 import '../utils/geo_controller.dart';

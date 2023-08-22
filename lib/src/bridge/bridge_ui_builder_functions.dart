@@ -1,6 +1,5 @@
 import 'dart:io' as io;
-import 'package:native_app_shell_mobile/src/utils/contacts_controller.dart';
-
+import '../utils/contacts_controller.dart';
 import 'bridge_event.dart';
 import '../utils/geo_controller.dart';
 import 'package:flutter/material.dart';

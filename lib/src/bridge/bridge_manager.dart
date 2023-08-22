@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../utils/request_container.dart';
 import '../bridge/bridge_ui_builder_functions.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
-import 'package:native_app_shell_mobile/src/utils/coder.dart';
+import '../utils/coder.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'bridge_event.dart';
