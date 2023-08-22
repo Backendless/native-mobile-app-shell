@@ -25,6 +25,9 @@ class BridgeManager {
       'REQUEST_CAMERA_PERMISSIONS';
   static const String _SHARE_SHEET_REQUEST = 'SHARE_SHEET_REQUEST';
   static const String _GET_CONTACTS_LIST = 'GET_CONTACTS_LIST';
+  static const String _GET_APP_INFO = 'GET_APP_INFO';
+
+  static PackageInfo? info;
 
   static Future<String> executeRequest(
       Map data, JavaScriptReplyProxy replier) async {
@@ -154,6 +157,24 @@ class BridgeManager {
           {
             return buildResponse(
                 data: requestContainer, response: 'NATIVE_SHELL');
+          }
+        case _GET_APP_INFO:
+          {
+            if (info == null) {
+              info = await PackageInfo.fromPlatform();
+            }
+
+            if (info != null) {
+              result = {
+                'appName': info!.appName,
+                'packageName': info!.packageName,
+                'version': info!.version,
+                'buildNumber': info!.buildNumber,
+                'buildSignature': info!.buildSignature,
+              };
+            }
+
+            return buildResponse(data: requestContainer, response: result);
           }
         case _REQUEST_CAMERA_PERMISSIONS:
           {
