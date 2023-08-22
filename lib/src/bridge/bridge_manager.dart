@@ -26,6 +26,8 @@ class BridgeManager {
   static const String _SHARE_SHEET_REQUEST = 'SHARE_SHEET_REQUEST';
   static const String _GET_CONTACTS_LIST = 'GET_CONTACTS_LIST';
   static const String _GET_APP_INFO = 'GET_APP_INFO';
+  static const String _UNREGISTER_DEVICE = 'UNREGISTER_DEVICE';
+  static const String _GET_DEVICE_REGISTRATION = 'GET_DEVICE_REGISTRATION';
 
   static PackageInfo? info;
 
@@ -112,9 +114,21 @@ class BridgeManager {
           {
             await Permission.notification.request();
 
+            List? channelsFromRequest = data['payload']['options']['channels'];
+
+            List<String> channelsToRegister = <String>['default'];
+
+            if (channelsFromRequest != null) {
+              channelsToRegister.clear();
+
+              channelsFromRequest.forEach((element) {
+                channelsToRegister.add(element.toString());
+              });
+            }
+
             result =
                 await BridgeUIBuilderFunctions.registerForPushNotifications(
-                    channels: <String>['default']);
+                    channels: channelsToRegister);
             if (result == null) throw Exception('Cannot register device');
             return buildResponse(
               data: requestContainer,
@@ -122,6 +136,30 @@ class BridgeManager {
                 'deviceToken': (result as DeviceRegistrationResult).deviceToken
               },
             );
+          }
+        case _UNREGISTER_DEVICE:
+          {
+            try {
+              await Backendless.messaging.unregisterDevice();
+
+              return buildResponse(data: requestContainer, response: true);
+            } catch (ex) {
+              print('EXCEPTION DURING UNREGISTER DEVICE: $ex');
+
+              return buildResponse(data: requestContainer, response: false);
+            }
+          }
+        case _GET_DEVICE_REGISTRATION:
+          {
+            try {
+              result = await Backendless.messaging.getDeviceRegistration();
+
+              return buildResponse(data: requestContainer, response: result);
+            } catch (ex) {
+              result = ex.toString();
+
+              return buildResponse(data: requestContainer, error: result);
+            }
           }
         case _SOCIAL_LOGIN:
           {
@@ -178,11 +216,13 @@ class BridgeManager {
           }
         case _REQUEST_CAMERA_PERMISSIONS:
           {
-            var permissionsResult = await Permission.camera.request();
+            PermissionStatus status = await Permission.camera.request();
+
+            result = status.name;
 
             return buildResponse(
               data: requestContainer,
-              response: permissionsResult.name,
+              response: result,
             );
           }
       }
@@ -216,6 +256,8 @@ class BridgeManager {
           'lat': response.latitude,
           'lng': response.longitude,
         };
+      } else if (response is DeviceRegistration) {
+        finalResult['payload']['result'] = response.toJson();
       } else if (response is List) {
         if (response.isNotEmpty && response[0] is Contact) {
           finalResult['payload']['result'] = List.empty(growable: true);
