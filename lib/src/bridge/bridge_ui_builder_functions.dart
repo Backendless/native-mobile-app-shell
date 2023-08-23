@@ -201,8 +201,8 @@ class BridgeUIBuilderFunctions {
   }
 
   static void onMessage(Map<String, dynamic> message) async {
-    AudioCache pushSound = AudioCache();
-    pushSound.play('notification_sounds/push_sound.wav');
+    final pushSound = AudioPlayer();
+    pushSound.play(AssetSource('notification_sounds/push_sound.wav'));
     PushNotificationMessage notification = PushNotificationMessage();
 
     if (io.Platform.isIOS) {

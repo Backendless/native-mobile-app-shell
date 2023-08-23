@@ -278,8 +278,8 @@ class _WebViewContainerState extends State<WebViewContainer> {
               print(response.response);
               return null;
             },
-            onDownloadStart: (controller, url) {
-              print('Downloading started with url: $url');
+            onDownloadStartRequest: (controller, req) {
+              print('Downloading started with url: ${req.url}');
             },
             onPrint: (controller, url) {
               print('onPrint event: $url');

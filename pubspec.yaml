@@ -17,7 +17,7 @@ dependencies:
   url_launcher: ^6.0.10
   backendless_sdk: ^7.2.7
   overlay_support: ^2.0.1
-  audioplayers: ^0.20.1
+  audioplayers: ^4.1.0
   geolocator: ^8.0.5
   sign_in_with_apple: ^3.3.0
   google_sign_in: ^5.4.1
