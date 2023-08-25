@@ -267,8 +267,15 @@ class _WebViewContainerState extends State<WebViewContainer> {
             onLoadStop: (controller, url) async {
               print('load stopped: $url');
               print('progress: ' + (await controller.getProgress()).toString());
+
+              if (io.Platform.isAndroid) {
+                if (url.toString().contains('.jpg') ||
+                    url.toString().contains('png')) {
+                  await controller.zoomBy(zoomFactor: 0.02);
+                }
+              }
             },
-            onLoadResource: (controller, loadedResources) {
+            onLoadResource: (controller, loadedResources) async {
               print('type: $loadedResources');
             },
             onProgressChanged: (controller, progress) {
