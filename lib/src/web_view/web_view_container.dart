@@ -1,5 +1,7 @@
 import 'dart:io' as io;
 import 'package:flutter/services.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../utils/support_functions.dart';
 import '../web_view/build_child_web_view.dart';
 import 'package:uni_links/uni_links.dart';
@@ -47,6 +49,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
         javaScriptEnabled: true,
         preferredContentMode: UserPreferredContentMode.MOBILE,
         useOnLoadResource: true,
+        useOnDownloadStart: true,
       ),
       android: AndroidInAppWebViewOptions(
         mixedContentMode: AndroidMixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
@@ -285,8 +288,14 @@ class _WebViewContainerState extends State<WebViewContainer> {
               print(response.response);
               return null;
             },
-            onDownloadStartRequest: (controller, req) {
+            onDownloadStartRequest: (controller, req) async {
               print('Downloading started with url: ${req.url}');
+
+              if (req.url.toString().contains('.pdf')) {
+                if (io.Platform.isAndroid) {
+                  await _handleOpenPdfView(context, req.url.toString());
+                }
+              }
             },
             onPrint: (controller, url) {
               print('onPrint event: $url');
@@ -330,6 +339,13 @@ class _WebViewContainerState extends State<WebViewContainer> {
         context,
         MaterialPageRoute(
             builder: (context) => buildChildWebView(context, childUrl)));
+  }
+
+  Future<void> _handleOpenPdfView(context, String url) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SfPdfViewer.network(url)),
+    );
   }
 
   void _configureWebView() {
