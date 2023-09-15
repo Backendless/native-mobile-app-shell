@@ -1,4 +1,6 @@
 import 'dart:io' as io;
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import '../utils/contacts_controller.dart';
 import 'bridge_event.dart';
 import '../utils/geo_controller.dart';
@@ -42,8 +44,17 @@ class BridgeUIBuilderFunctions {
 
     try {
       DateTime time = DateTime.now().add(const Duration(days: 15));
-      return await Backendless.messaging
-          .registerDevice(channelsList, time, onMessage);
+      if (io.Platform.isAndroid) {
+        return await Backendless.messaging.registerDevice(
+          channels: channelsList,
+          expiration: time,
+          onTapPushActionAndroid: _onTapAndroid,
+          onTapPushActionIOS: _onTapIOS,
+        );
+      } else {
+        return await Backendless.messaging.registerDevice(
+            channels: channelsList, expiration: time, onMessage: onMessage);
+      }
     } catch (ex) {
       return ex;
     }
@@ -86,18 +97,14 @@ class BridgeUIBuilderFunctions {
         }
       }
 
-      user = await Backendless.userService
-          .loginWithOauth2(providerCode, token!, <String, String>{}, true);
+      user = await Backendless.userService.loginWithOauth2(
+        providerCode,
+        token!,
+        <String, String>{},
+      );
       userId = user!.getUserId();
-
-      if (io.Platform.isAndroid) {
-        userToken = await Backendless.userService.getUserToken();
-        user.setProperty('user-token', userToken);
-      } else {
-        userToken = user.getProperty('userToken');
-        user.removeProperty('userToken');
-        user.setProperty('user-token', userToken);
-      }
+      userToken = await Backendless.userService.getUserToken();
+      user.setProperty('user-token', userToken);
     } else {
       String? result = await Backendless.userService.getAuthorizationUrlLink(
         providerCode,
@@ -200,7 +207,7 @@ class BridgeUIBuilderFunctions {
     return contactsList;
   }
 
-  static void onMessage(Map<String, dynamic> message) async {
+  static Future<void> onMessage(Map message) async {
     final pushSound = AudioPlayer();
     pushSound.play(AssetSource('notification_sounds/push_sound.wav'));
     PushNotificationMessage notification = PushNotificationMessage();
@@ -266,5 +273,15 @@ class BridgeUIBuilderFunctions {
         );
       },
     );
+  }
+
+  static Future<void> _onTapAndroid(RemoteMessage message) async {
+    print(
+        '_onTapAndroid section called. bridge_ui_builder_functions.dart file, 309 line');
+  }
+
+  static Future<void> _onTapIOS({Map? data}) async {
+    print(
+        '_onTapIOS section called. bridge_ui_builder_functions.dart file, 313 line');
   }
 }

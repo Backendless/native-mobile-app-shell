@@ -61,10 +61,8 @@ flutter {
 
 dependencies {
     implementation 'com.android.support:multidex:1.0.3'
-    implementation platform('com.google.firebase:firebase-bom:29.0.0')
+    implementation platform('com.google.firebase:firebase-bom:31.2.2')
     implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-core:20.0.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.0'
-    implementation 'com.google.firebase:firebase-iid'
     implementation 'androidx.work:work-runtime-ktx:2.7.0'
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
 }

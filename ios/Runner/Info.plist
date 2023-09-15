@@ -38,11 +38,11 @@
 			<key>CFBundleURLIconFile</key>
 			<string></string>
 			<key>CFBundleURLName</key>
-			<string>your.domain.com</string>
+			<string>your.domain</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>https</string>
-				<string>yourScheme</string>
+				<string>yourCustomScheme</string>
 			</array>
 		</dict>
 		<dict>
@@ -138,5 +138,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

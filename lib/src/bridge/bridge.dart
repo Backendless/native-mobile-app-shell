@@ -18,6 +18,7 @@ class Bridge {
         onPostMessage: (message, sourceOrigin, isMainFrame, replyProxy) async {
           String? result;
           try {
+            print('got data from codeless: $message');
             Map data = await jsonDecode(message!);
             data['_context'] = context;
 
@@ -44,6 +45,7 @@ class Bridge {
               await BridgeUIBuilderFunctions.alertUnsupportedPlatform(context);
             } else if (result.contains('\"type\":\"ADD_LISTENER\"')) {}
 
+            print('sent data to codeless: $result');
             await replyProxy.postMessage(result);
           } catch (ex) {
             throw Exception(ex);

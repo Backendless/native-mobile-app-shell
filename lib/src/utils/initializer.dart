@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'coder.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
@@ -25,7 +27,23 @@ class ShellInitializer {
           iosApiKey: initData['apiKey'],
           androidApiKey: initData['apiKey']);
 
-      await Backendless.setUrl(initData['serverURL']);
+      Backendless.url = initData['serverURL'];
+      await Firebase.initializeApp();
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
     } catch (ex) {
       print('====== Error during initialization application ======\n$ex');
     }

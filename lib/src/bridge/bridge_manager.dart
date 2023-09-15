@@ -35,7 +35,13 @@ class BridgeManager {
     final requestContainer =
         RequestContainer(data['payload']['id'], data['payload']['type']);
 
+    requestContainer.userToken = data['payload']['userToken'];
+
     try {
+      if (requestContainer.userToken != null) {
+        await Backendless.userService.setUserToken(requestContainer.userToken!);
+      }
+
       var result;
       switch (requestContainer.operations) {
         case _ADD_LISTENER:
@@ -54,7 +60,9 @@ class BridgeManager {
               return buildResponse(data: requestContainer, response: result);
             } catch (ex) {
               return buildResponse(
-                  data: requestContainer, response: null, error: ex.toString());
+                  data: requestContainer,
+                  response: null,
+                  error: {'message': ex.toString()});
             }
           }
         case _REMOVE_LISTENER:
@@ -67,7 +75,9 @@ class BridgeManager {
               return buildResponse(data: requestContainer, response: result);
             } catch (ex) {
               return buildResponse(
-                  data: requestContainer, response: null, error: ex.toString());
+                  data: requestContainer,
+                  response: null,
+                  error: {'message': ex.toString()});
             }
           }
         case _GET_CURRENT_LOCATION:
@@ -78,7 +88,9 @@ class BridgeManager {
               return buildResponse(data: requestContainer, response: result);
             } catch (ex) {
               return buildResponse(
-                  data: requestContainer, response: null, error: ex.toString());
+                  data: requestContainer,
+                  response: null,
+                  error: {'message': ex.toString()});
             }
           }
         case _GET_CONTACTS_LIST:
@@ -89,7 +101,9 @@ class BridgeManager {
               return buildResponse(data: requestContainer, response: result);
             } catch (ex) {
               return buildResponse(
-                  data: requestContainer, response: null, error: ex.toString());
+                  data: requestContainer,
+                  response: null,
+                  error: {'message': ex.toString()});
             }
           }
         case _SHARE_SHEET_REQUEST:
@@ -113,35 +127,38 @@ class BridgeManager {
           {
             await Permission.notification.request();
 
-            List? channelsFromRequest = data['payload']['options']['channels'];
-
-            List<String> channelsToRegister = <String>['default'];
-
-            if (channelsFromRequest != null) {
-              channelsToRegister.clear();
-
-              channelsFromRequest.forEach((element) {
-                channelsToRegister.add(element.toString());
-              });
-            }
-
+            List<String> targetChannels = [
+              'push',
+              'push_background',
+              'default'
+            ];
             result =
                 await BridgeUIBuilderFunctions.registerForPushNotifications(
-                    channels: channelsToRegister);
-            if (result == null) throw Exception('Cannot register device');
+                    channels: targetChannels);
+            if (result is Exception || result is BackendlessException) {
+              return buildResponse(
+                  data: requestContainer, error: {'message': result.message});
+            }
+
+            if (result is DeviceRegistrationResult) {
+              return buildResponse(
+                data: requestContainer,
+                response: {'deviceToken': result.deviceToken},
+              );
+            }
+
             return buildResponse(
-              data: requestContainer,
-              response: {
-                'deviceToken': (result as DeviceRegistrationResult).deviceToken
-              },
-            );
+                data: requestContainer, error: {'message': 'Unknown error'});
           }
         case _UNREGISTER_DEVICE:
           {
             try {
-              await Backendless.messaging.unregisterDevice();
+              result = await Backendless.messaging.unregisterDevice();
 
-              return buildResponse(data: requestContainer, response: true);
+              return buildResponse(
+                data: requestContainer,
+                response: result,
+              );
             } catch (ex) {
               print('EXCEPTION DURING UNREGISTER DEVICE: $ex');
 
@@ -232,18 +249,19 @@ class BridgeManager {
         data: requestContainer,
         error: data['payload']['error'] != null
             ? data['payload']['error']
-            : ex.toString(),
+            : {'message': ex.toString()},
       );
     }
   }
 
   static String buildResponse(
-      {required RequestContainer data, dynamic response, String? error}) {
+      {required RequestContainer data, dynamic response, Map? error}) {
     Map? finalResult = {
       'event': 'RESPONSE',
       'payload': <String?, dynamic>{
         'type': data.operations,
         'id': data.id,
+        'userToken': data.userToken,
       }
     };
 
@@ -270,7 +288,13 @@ class BridgeManager {
         }
       } else
         finalResult['payload']['result'] = response;
-    } else if (error != null) finalResult['payload']['error'] = error;
+    } else if (error != null) {
+      if (error.containsKey('message') &&
+          error['message'] is BackendlessException) {
+        error = (error['message'] as BackendlessException).toJson();
+      }
+      finalResult['payload']['error'] = error;
+    }
 
     try {
       return json.encode(

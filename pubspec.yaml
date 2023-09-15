@@ -15,19 +15,21 @@ dependencies:
   permission_handler: ^8.1.6
   flutter_inappwebview: ^5.7.2+3
   url_launcher: ^6.0.10
-  backendless_sdk: ^7.2.7
+  backendless_sdk: ^8.0.0-alpha.17
   overlay_support: ^2.0.1
   audioplayers: ^5.1.0
   geolocator: ^8.0.5
   sign_in_with_apple: ^3.3.0
   google_sign_in: ^5.4.1
-  flutter_facebook_auth: ^3.5.7
+  flutter_facebook_auth: ^5.0.7
   uni_links: ^0.5.1
   path_provider: ^2.0.12
   package_info_plus: ^3.0.2
   share_plus: 7.0.2
   contacts_service: ^0.6.3
   syncfusion_flutter_pdfviewer: ^21.2.10
+  firebase_core: ^2.7.0
+  firebase_messaging: ^14.2.5
 
 dev_dependencies:
   flutter_test:

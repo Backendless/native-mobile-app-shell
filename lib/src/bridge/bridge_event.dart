@@ -61,11 +61,13 @@ class BridgeEvent {
         for (var event in _eventsContainer![name]!) {
           if (event.equalTo(id)) {
             event.dispatch = null;
+            _eventsContainer!.remove(event);
             _eventsContainer![name]!.remove(event);
+
             if (_eventsContainer![name]!.isEmpty) {
               _eventsContainer!.remove(name);
             }
-            print("Event was removed");
+
             return true;
           }
         }

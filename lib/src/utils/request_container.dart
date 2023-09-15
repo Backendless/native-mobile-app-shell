@@ -6,4 +6,5 @@ class RequestContainer {
 
   String id;
   String operations;
+  String? userToken;
 }
