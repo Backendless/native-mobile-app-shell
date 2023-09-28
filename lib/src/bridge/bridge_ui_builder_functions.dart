@@ -33,10 +33,11 @@ class BridgeUIBuilderFunctions {
     return BridgeEvent.removeEvent(name, id);
   }
 
-  static Future<dynamic> registerForPushNotifications(
-      {List<String>? channels}) async {
+  static Future<dynamic> registerForPushNotifications({
+    List<String>? channels,
+  }) async {
     List<String> channelsList = [];
-
+    var res;
     if (channels != null)
       channelsList.addAll(channels);
     else
@@ -44,17 +45,20 @@ class BridgeUIBuilderFunctions {
 
     try {
       DateTime time = DateTime.now().add(const Duration(days: 15));
+
       if (io.Platform.isAndroid) {
-        return await Backendless.messaging.registerDevice(
+        res = await Backendless.messaging.registerDevice(
           channels: channelsList,
           expiration: time,
           onTapPushActionAndroid: _onTapAndroid,
           onTapPushActionIOS: _onTapIOS,
         );
       } else {
-        return await Backendless.messaging.registerDevice(
+        res = await Backendless.messaging.registerDevice(
             channels: channelsList, expiration: time, onMessage: onMessage);
       }
+
+      return res;
     } catch (ex) {
       return ex;
     }

@@ -251,6 +251,8 @@ class BridgeManager {
             ? data['payload']['error']
             : {'message': ex.toString()},
       );
+    } finally {
+      await Backendless.userService.removeUserToken();
     }
   }
 
