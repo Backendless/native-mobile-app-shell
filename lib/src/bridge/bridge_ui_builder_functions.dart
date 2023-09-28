@@ -51,11 +51,13 @@ class BridgeUIBuilderFunctions {
           channels: channelsList,
           expiration: time,
           onTapPushActionAndroid: _onTapAndroid,
-          onTapPushActionIOS: _onTapIOS,
         );
       } else {
         res = await Backendless.messaging.registerDevice(
-            channels: channelsList, expiration: time, onMessage: onMessage);
+            channels: channelsList,
+            expiration: time,
+            onMessage: onMessage,
+            onTapPushActionIOS: _onTapIOS);
       }
 
       return res;

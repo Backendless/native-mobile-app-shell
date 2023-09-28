@@ -127,11 +127,13 @@ class BridgeManager {
           {
             await Permission.notification.request();
 
-            List<String> targetChannels = [
-              'push',
-              'push_background',
-              'default'
-            ];
+            List<String> targetChannels = ['default'];
+
+            if (data['payload']['options']['channels'] != null) {
+              targetChannels =
+                  List<String>.from(data['payload']['options']['channels']);
+            }
+
             result =
                 await BridgeUIBuilderFunctions.registerForPushNotifications(
                     channels: targetChannels);
