@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io' as io;
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../utils/contacts_controller.dart';
+import '../utils/initializer.dart';
 import 'bridge_event.dart';
 import '../utils/geo_controller.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,8 @@ import 'package:contacts_service/contacts_service.dart';
 import '../push_notifications/message_notification.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+
+import 'bridge_manager.dart';
 
 class BridgeUIBuilderFunctions {
   static const GOOGLE_CLIENT_ID_IOS = 'xxxxxx.apps.googleusercontent.com';
@@ -50,14 +54,14 @@ class BridgeUIBuilderFunctions {
         res = await Backendless.messaging.registerDevice(
           channels: channelsList,
           expiration: time,
-          onTapPushActionAndroid: _onTapAndroid,
+          onTapPushActionAndroid: onTapAndroid,
         );
       } else {
         res = await Backendless.messaging.registerDevice(
             channels: channelsList,
             expiration: time,
             onMessage: onMessage,
-            onTapPushActionIOS: _onTapIOS);
+            onTapPushActionIOS: onTapIOS);
       }
 
       return res;
@@ -227,7 +231,7 @@ class BridgeUIBuilderFunctions {
       notification.body = message['message'];
     }
 
-    var headers = await createHeadersForOnTapPushAction();
+    var headers = await createHeadersForOnTapPushAction(message);
 
     var notificationMessage = MessageNotification(
       id: 0,
@@ -247,9 +251,21 @@ class BridgeUIBuilderFunctions {
     );
   }
 
-  static void dispatchTapOnPushEvent(Map headers) {
+  static Future<void> dispatchTapOnPushEvent(Map headers) async {
     if (BridgeEvent.getEventsByName('onTapPushAction') != null) {
-      BridgeEvent.dispatchEventsByName('onTapPushAction', {'data': headers});
+      await BridgeEvent.dispatchEventsByName(
+          'onTapPushAction', {'data': headers});
+    } else {
+      BridgeManager.onTapEventInitializeController.stream.listen((event) async {
+        if (event) {
+          await Future.delayed(Duration(milliseconds: 500));
+
+          if (BridgeEvent.getEventsByName('onTapPushAction') != null) {
+            await BridgeEvent.dispatchEventsByName('onTapPushAction',
+                {'data': ShellInitializer.waitingInitializationData});
+          }
+        }
+      });
     }
   }
 
@@ -281,13 +297,32 @@ class BridgeUIBuilderFunctions {
     );
   }
 
-  static Future<void> _onTapAndroid(RemoteMessage message) async {
+  static Future<void> onTapAndroid(RemoteMessage message) async {
     print(
-        '_onTapAndroid section called. bridge_ui_builder_functions.dart file, 309 line');
+        'onTapAndroid section called. bridge_ui_builder_functions.dart file, 309 line');
   }
 
-  static Future<void> _onTapIOS({Map? data}) async {
+  static Future<void> onTapIOS({Map? data}) async {
+    if (data != null) {
+      var map = data;
+
+      if (data.containsKey('payload')) {
+        map = jsonDecode(data['payload']);
+      }
+
+      var headers = await createHeadersForOnTapPushAction(map);
+
+      if (ShellInitializer.bridgeInitilized) {
+        await dispatchTapOnPushEvent(headers);
+      } else {
+        ShellInitializer.waitingInitializationData = headers;
+        ShellInitializer.initController.stream.listen((event) async {
+          await dispatchTapOnPushEvent(
+              ShellInitializer.waitingInitializationData!);
+        });
+      }
+    }
     print(
-        '_onTapIOS section called. bridge_ui_builder_functions.dart file, 313 line');
+        'onTapIOS section called. bridge_ui_builder_functions.dart file, 313 line');
   }
 }

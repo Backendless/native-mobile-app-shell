@@ -41,6 +41,10 @@ class Bridge {
               return;
             }
 
+            if (data['payload']['type'] == 'ON_TAP_EVENT_INITIALIZED') {
+              await BridgeManager.onTapEventInitializeController.close();
+            }
+
             if (result.contains('_UNSUPPORTED FOR THIS PLATFORM')) {
               await BridgeUIBuilderFunctions.alertUnsupportedPlatform(context);
             } else if (result.contains('\"type\":\"ADD_LISTENER\"')) {}

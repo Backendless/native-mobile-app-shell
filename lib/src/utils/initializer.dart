@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +9,10 @@ import 'package:overlay_support/overlay_support.dart';
 
 class ShellInitializer {
   static const platform = MethodChannel('backendless/push_notifications');
+
+  static bool bridgeInitilized = false;
+  static StreamController initController = StreamController.broadcast();
+  static Map? waitingInitializationData;
 
   static Future<void> initApp({required String pathToSettings}) async {
     kNotificationSlideDuration = const Duration(milliseconds: 500);

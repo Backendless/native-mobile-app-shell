@@ -10,7 +10,7 @@
 	</array>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:drivingclub.backendless.app</string>
+		<string>applinks:xxx.backendless.com</string>
 	</array>
 </dict>
 </plist>

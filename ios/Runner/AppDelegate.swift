@@ -15,6 +15,13 @@ import Flutter
           name: "backendless/push_notifications",
           binaryMessenger: controller!.binaryMessenger)
 
+        //uncomment to customize on tap push action
+//      if let notificationData = launchOptions?[UIApplication.LaunchOptionsKey(rawValue: "UIApplicationLaunchOptionsRemoteNotificationKey")] {
+//          DispatchQueue.main.async {
+//              self.pushChannel?.invokeMethod("onTapPushAction", arguments: notificationData as! Dictionary<String, Any>);
+//          }
+//      }
+
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

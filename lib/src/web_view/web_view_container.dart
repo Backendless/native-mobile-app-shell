@@ -331,6 +331,11 @@ class _WebViewContainerState extends State<WebViewContainer> {
             AndroidWebViewFeature.WEB_MESSAGE_LISTENER)) {
       await manager!.addWebMessageListener(context);
     }
+
+    ShellInitializer.bridgeInitilized = true;
+    if (ShellInitializer.initController.hasListener) {
+      ShellInitializer.initController.add('initialized');
+    }
   }
 
   Future<void> _handleCreateWindow(
@@ -368,17 +373,14 @@ class _WebViewContainerState extends State<WebViewContainer> {
         print('TEST METHOD ON TAP PUSH');
         print(methodCall.arguments);
 
-        var headers = await createHeadersForOnTapPushAction();
-
-        if (manager != null) {
-          BridgeUIBuilderFunctions.dispatchTapOnPushEvent(headers);
-        }
-
         ///TODO
         if (!io.Platform.isAndroid ||
             await AndroidWebViewFeature.isFeatureSupported(
                 AndroidWebViewFeature.POST_WEB_MESSAGE)) {
-          BridgeEvent.dispatchEventsByName('onTapPushAction', {});
+          //BridgeEvent.dispatchEventsByName('onTapPushAction', {});
+        } else {
+          await BridgeUIBuilderFunctions.onTapIOS(
+              data: methodCall.arguments as Map);
         }
 
         break;
