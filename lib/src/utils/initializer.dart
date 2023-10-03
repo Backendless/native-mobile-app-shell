@@ -34,22 +34,22 @@ class ShellInitializer {
           androidApiKey: initData['apiKey']);
 
       Backendless.url = initData['serverURL'];
-      await Firebase.initializeApp();
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-      await FirebaseMessaging.instance.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
+      // await Firebase.initializeApp();
+      // await FirebaseMessaging.instance
+      //     .setForegroundNotificationPresentationOptions(
+      //   alert: true,
+      //   badge: true,
+      //   sound: true,
+      // );
+      // await FirebaseMessaging.instance.requestPermission(
+      //   alert: true,
+      //   announcement: false,
+      //   badge: true,
+      //   carPlay: false,
+      //   criticalAlert: false,
+      //   provisional: false,
+      //   sound: true,
+      // );
     } catch (ex) {
       print('====== Error during initialization application ======\n$ex');
     }
