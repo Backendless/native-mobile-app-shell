@@ -369,7 +369,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
   ///TODO(This feature is in develop now)
   Future<dynamic> nativeEventHandler(MethodCall methodCall) async {
     switch (methodCall.method) {
-      case 'onTapPushAction':
+      case 'TAP_PUSH_ACTION':
         print('TEST METHOD ON TAP PUSH');
         print(methodCall.arguments);
 

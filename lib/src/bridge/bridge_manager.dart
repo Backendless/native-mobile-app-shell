@@ -27,8 +27,9 @@ class BridgeManager {
   static const String _GET_CONTACTS_LIST = 'GET_CONTACTS_LIST';
   static const String _GET_APP_INFO = 'GET_APP_INFO';
   static const String _UNREGISTER_DEVICE = 'UNREGISTER_DEVICE';
-  static const String _ON_TAP_EVENT_INITIALIZED = 'ON_TAP_EVENT_INITIALIZED';
+  static const String _TAP_PUSH_ACTION = 'TAP_PUSH_ACTION';
   static const String _GET_DEVICE_REGISTRATION = 'GET_DEVICE_REGISTRATION';
+  //static const String _REMOTE_NOTIFICATION = ''
 
   static PackageInfo? info;
   static StreamController<bool> onTapEventInitializeController =
@@ -84,9 +85,19 @@ class BridgeManager {
                   error: {'message': ex.toString()});
             }
           }
-        case _ON_TAP_EVENT_INITIALIZED:
+        case _TAP_PUSH_ACTION:
           {
             try {
+              String eventName = data['payload']['options']['event'];
+              String eventId = data['payload']['options']['id'];
+
+              BridgeEvent event = BridgeEvent(
+                eventId,
+                eventName,
+                replier,
+              );
+
+              await BridgeUIBuilderFunctions.addListener(event);
               onTapEventInitializeController.add(true);
 
               return buildResponse(data: requestContainer, response: 'Ok');

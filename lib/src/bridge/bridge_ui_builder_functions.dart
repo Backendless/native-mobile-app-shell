@@ -252,16 +252,16 @@ class BridgeUIBuilderFunctions {
   }
 
   static Future<void> dispatchTapOnPushEvent(Map headers) async {
-    if (BridgeEvent.getEventsByName('onTapPushAction') != null) {
+    if (BridgeEvent.getEventsByName('TAP_PUSH_ACTION') != null) {
       await BridgeEvent.dispatchEventsByName(
-          'onTapPushAction', {'data': headers});
+          'TAP_PUSH_ACTION', {'data': headers});
     } else {
       BridgeManager.onTapEventInitializeController.stream.listen((event) async {
         if (event) {
           await Future.delayed(Duration(milliseconds: 500));
 
-          if (BridgeEvent.getEventsByName('onTapPushAction') != null) {
-            await BridgeEvent.dispatchEventsByName('onTapPushAction',
+          if (BridgeEvent.getEventsByName('TAP_PUSH_ACTION') != null) {
+            await BridgeEvent.dispatchEventsByName('TAP_PUSH_ACTION',
                 {'data': ShellInitializer.waitingInitializationData});
           }
         }

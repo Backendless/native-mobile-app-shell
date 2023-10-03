@@ -18,7 +18,7 @@ import Flutter
         //uncomment to customize on tap push action
 //      if let notificationData = launchOptions?[UIApplication.LaunchOptionsKey(rawValue: "UIApplicationLaunchOptionsRemoteNotificationKey")] {
 //          DispatchQueue.main.async {
-//              self.pushChannel?.invokeMethod("onTapPushAction", arguments: notificationData as! Dictionary<String, Any>);
+//              self.pushChannel?.invokeMethod("TAP_PUSH_ACTION", arguments: notificationData as! Dictionary<String, Any>);
 //          }
 //      }
 
@@ -41,7 +41,7 @@ import Flutter
       }
       else if state == .inactive {
         print("INACTIVE")
-        pushChannel?.invokeMethod("onTapPushAction", arguments: userInfo)
+        pushChannel?.invokeMethod("TAP_PUSH_ACTION", arguments: userInfo)
       }
 
       completionHandler(.newData)
