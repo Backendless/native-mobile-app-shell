@@ -18,7 +18,7 @@ import 'package:contacts_service/contacts_service.dart';
 import '../push_notifications/message_notification.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'bridge_manager.dart';
 
 class BridgeUIBuilderFunctions {
@@ -55,6 +55,7 @@ class BridgeUIBuilderFunctions {
           channels: channelsList,
           expiration: time,
           onTapPushActionAndroid: onTapAndroid,
+          onMessageOpenedAppAndroid: onTapAndroidBackground,
         );
       } else {
         res = await Backendless.messaging.registerDevice(
@@ -261,8 +262,11 @@ class BridgeUIBuilderFunctions {
           await Future.delayed(Duration(milliseconds: 500));
 
           if (BridgeEvent.getEventsByName('TAP_PUSH_ACTION') != null) {
-            await BridgeEvent.dispatchEventsByName('TAP_PUSH_ACTION',
-                {'data': ShellInitializer.waitingInitializationData});
+            await BridgeEvent.dispatchEventsByName('TAP_PUSH_ACTION', {
+              'data': io.Platform.isIOS
+                  ? ShellInitializer.waitingInitializationData
+                  : headers
+            });
           }
         }
       });
@@ -297,9 +301,17 @@ class BridgeUIBuilderFunctions {
     );
   }
 
-  static Future<void> onTapAndroid(RemoteMessage message) async {
+  static Future<void> onTapAndroid(NotificationResponse? response) async {
+    if (response != null && response.payload != null) {
+      Map map = jsonDecode(response.payload!);
+
+      var headers = await createHeadersForOnTapPushAction(map);
+
+      await dispatchTapOnPushEvent(headers);
+    }
+
     print(
-        'onTapAndroid section called. bridge_ui_builder_functions.dart file, 309 line');
+        'onTapAndroid section called. bridge_ui_builder_functions.dart file.');
   }
 
   static Future<void> onTapIOS({Map? data}) async {
@@ -312,7 +324,7 @@ class BridgeUIBuilderFunctions {
 
       var headers = await createHeadersForOnTapPushAction(map);
 
-      if (ShellInitializer.bridgeInitilized) {
+      if (ShellInitializer.bridgeInitialized) {
         await dispatchTapOnPushEvent(headers);
       } else {
         ShellInitializer.waitingInitializationData = headers;
@@ -325,4 +337,10 @@ class BridgeUIBuilderFunctions {
     print(
         'onTapIOS section called. bridge_ui_builder_functions.dart file, 313 line');
   }
+}
+
+@pragma('vm:entry-point')
+Future<void> onTapAndroidBackground(RemoteMessage response) async {
+  print(
+      'onTapAndroidBackground section called. bridge_ui_builder_functions.dart file.');
 }

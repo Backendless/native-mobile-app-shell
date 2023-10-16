@@ -6,13 +6,14 @@ import 'package:flutter/services.dart';
 import 'coder.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class ShellInitializer {
   static const platform = MethodChannel('backendless/push_notifications');
-
-  static bool bridgeInitilized = false;
+  static bool bridgeInitialized = false;
   static StreamController initController = StreamController.broadcast();
   static Map? waitingInitializationData;
+  static NotificationAppLaunchDetails? launchDetails;
 
   static Future<void> initApp({required String pathToSettings}) async {
     kNotificationSlideDuration = const Duration(milliseconds: 500);
@@ -20,6 +21,8 @@ class ShellInitializer {
 
     try {
       final initData = await Coder.readJson(path: pathToSettings);
+
+      launchDetails = await Backendless.appLaunchDetails;
 
       if (initData['apiDomain'] != null) {
         await Backendless.initApp(

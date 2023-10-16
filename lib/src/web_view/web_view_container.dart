@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io' as io;
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -332,7 +333,18 @@ class _WebViewContainerState extends State<WebViewContainer> {
       await manager!.addWebMessageListener(context);
     }
 
-    ShellInitializer.bridgeInitilized = true;
+    ShellInitializer.bridgeInitialized = true;
+
+    if (ShellInitializer.launchDetails!.didNotificationLaunchApp) {
+      print('LAUNCHED BY NOTIFICATION');
+
+      String payload =
+          ShellInitializer.launchDetails!.notificationResponse!.payload!;
+      Map jsonPayload = jsonDecode(payload);
+
+      await BridgeUIBuilderFunctions.dispatchTapOnPushEvent(jsonPayload);
+    }
+
     if (ShellInitializer.initController.hasListener) {
       ShellInitializer.initController.add('initialized');
     }
