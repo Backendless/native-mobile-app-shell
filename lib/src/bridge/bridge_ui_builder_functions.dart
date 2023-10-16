@@ -267,6 +267,7 @@ class BridgeUIBuilderFunctions {
                   ? ShellInitializer.waitingInitializationData
                   : headers
             });
+            await BridgeManager.onTapEventInitializeController.close();
           }
         }
       });

@@ -98,7 +98,10 @@ class BridgeManager {
               );
 
               await BridgeUIBuilderFunctions.addListener(event);
-              onTapEventInitializeController.add(true);
+
+              if (!onTapEventInitializeController.isClosed) {
+                onTapEventInitializeController.add(true);
+              }
 
               return buildResponse(data: requestContainer, response: 'Ok');
             } catch (ex) {
