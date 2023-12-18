@@ -29,6 +29,10 @@ class BridgeManager {
   static const String _UNREGISTER_DEVICE = 'UNREGISTER_DEVICE';
   static const String _TAP_PUSH_ACTION = 'TAP_PUSH_ACTION';
   static const String _GET_DEVICE_REGISTRATION = 'GET_DEVICE_REGISTRATION';
+  static const String _ACCELEROMETER_DATA = 'ACCELEROMETER_DATA';
+  static const String _USER_ACCELEROMETER_DATA = 'USER_ACCELEROMETER_DATA';
+  static const String _GYROSCOPE_DATA = 'GYROSCOPE_DATA';
+  static const String _MAGNETOMETER_DATA = 'MAGNETOMETER_DATA';
   //static const String _REMOTE_NOTIFICATION = ''
 
   static PackageInfo? info;
@@ -262,6 +266,98 @@ class BridgeManager {
             }
 
             return buildResponse(data: requestContainer, response: result);
+          }
+        case _ACCELEROMETER_DATA:
+          {
+            try {
+              String eventName = data['payload']['options']['event'];
+              String eventId = data['payload']['options']['id'];
+
+              BridgeEvent event = BridgeEvent(
+                eventId,
+                eventName,
+                replier,
+              );
+
+              await BridgeUIBuilderFunctions.addListener(event);
+              await BridgeUIBuilderFunctions.setAccelerometerEvent(event);
+
+              return buildResponse(data: requestContainer, response: 'Ok');
+            } catch (ex) {
+              return buildResponse(
+                  data: requestContainer,
+                  response: null,
+                  error: {'message': ex.toString()});
+            }
+          }
+        case _USER_ACCELEROMETER_DATA:
+          {
+            try {
+              String eventName = data['payload']['options']['event'];
+              String eventId = data['payload']['options']['id'];
+
+              BridgeEvent event = BridgeEvent(
+                eventId,
+                eventName,
+                replier,
+              );
+
+              await BridgeUIBuilderFunctions.addListener(event);
+              await BridgeUIBuilderFunctions.setUserAccelerometerEvent(event);
+
+              return buildResponse(data: requestContainer, response: 'Ok');
+            } catch (ex) {
+              return buildResponse(
+                  data: requestContainer,
+                  response: null,
+                  error: {'message': ex.toString()});
+            }
+          }
+        case _MAGNETOMETER_DATA:
+          {
+            try {
+              String eventName = data['payload']['options']['event'];
+              String eventId = data['payload']['options']['id'];
+
+              BridgeEvent event = BridgeEvent(
+                eventId,
+                eventName,
+                replier,
+              );
+
+              await BridgeUIBuilderFunctions.addListener(event);
+              await BridgeUIBuilderFunctions.setMagnetometerEvent(event);
+
+              return buildResponse(data: requestContainer, response: 'Ok');
+            } catch (ex) {
+              return buildResponse(
+                  data: requestContainer,
+                  response: null,
+                  error: {'message': ex.toString()});
+            }
+          }
+        case _GYROSCOPE_DATA:
+          {
+            try {
+              String eventName = data['payload']['options']['event'];
+              String eventId = data['payload']['options']['id'];
+
+              BridgeEvent event = BridgeEvent(
+                eventId,
+                eventName,
+                replier,
+              );
+
+              await BridgeUIBuilderFunctions.addListener(event);
+              await BridgeUIBuilderFunctions.setGyroscopeEvent(event);
+
+              return buildResponse(data: requestContainer, response: 'Ok');
+            } catch (ex) {
+              return buildResponse(
+                  data: requestContainer,
+                  response: null,
+                  error: {'message': ex.toString()});
+            }
           }
         case _REQUEST_CAMERA_PERMISSIONS:
           {

@@ -20,6 +20,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'bridge_manager.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 
 class BridgeUIBuilderFunctions {
   static const GOOGLE_CLIENT_ID_IOS = 'xxxxxx.apps.googleusercontent.com';
@@ -216,6 +217,46 @@ class BridgeUIBuilderFunctions {
     var contactsList = await ContactsController.getContactsList();
 
     return contactsList;
+  }
+
+  static Future<void> setAccelerometerEvent(BridgeEvent bridgeEvent) async {
+    accelerometerEventStream(samplingPeriod: SensorInterval.normalInterval)
+        .listen((event) {
+      BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
+          {'x': '${event.x}', 'y': '${event.y}', 'z': '${event.z}'});
+    }, onError: (error) {
+      print('Error in \'accelerometer event\' has appeared:$error');
+    });
+  }
+
+  static Future<void> setMagnetometerEvent(BridgeEvent bridgeEvent) async {
+    magnetometerEventStream(samplingPeriod: SensorInterval.normalInterval)
+        .listen((event) {
+      BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
+          {'x': '${event.x}', 'y': '${event.y}', 'z': '${event.z}'});
+    }, onError: (error) {
+      print('Error in \'magnetometer event\' has appeared:$error');
+    });
+  }
+
+  static Future<void> setGyroscopeEvent(BridgeEvent bridgeEvent) async {
+    gyroscopeEventStream(samplingPeriod: SensorInterval.normalInterval).listen(
+        (event) {
+      BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
+          {'x': '${event.x}', 'y': '${event.y}', 'z': '${event.z}'});
+    }, onError: (error) {
+      print('Error in \'gyroscope event\' has appeared');
+    });
+  }
+
+  static Future<void> setUserAccelerometerEvent(BridgeEvent bridgeEvent) async {
+    userAccelerometerEventStream(samplingPeriod: SensorInterval.normalInterval)
+        .listen((event) {
+      BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
+          {'x': '${event.x}', 'y': '${event.y}', 'z': '${event.z}'});
+    }, onError: (error) {
+      print('Error in \'gyroscope event\' has appeared');
+    });
   }
 
   static Future<void> onMessage(Map message) async {
