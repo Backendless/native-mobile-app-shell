@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
@@ -412,6 +413,19 @@ class BridgeManager {
 
           response.forEach((element) {
             Map mappedElement = element.toMap();
+            if (mappedElement.containsKey('avatar')) {
+              Uint8List? avatar = mappedElement['avatar'];
+
+              if (avatar != null && avatar.isNotEmpty) {
+                // ignore: non_constant_identifier_names
+                String base64_avatar = base64Encode(avatar);
+
+                mappedElement['avatar'] =
+                    'data:image/png;base64,' + base64_avatar;
+              } else {
+                mappedElement['avatar'] = null;
+              }
+            }
             (finalResult['payload']['result'] as List).add(mappedElement);
           });
         } else {

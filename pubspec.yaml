@@ -29,7 +29,7 @@ dependencies:
   contacts_service: ^0.6.3
   syncfusion_flutter_pdfviewer: ^21.2.10
   firebase_core: ^2.7.0
-  firebase_messaging: ^14.2.5
+  firebase_messaging: ^14.7.10
   sensors_plus: ^4.0.2
 
 dev_dependencies:

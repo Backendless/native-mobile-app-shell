@@ -93,7 +93,7 @@
 <!--       </receiver>-->
        <meta-data
            android:name="com.google.firebase.messaging.default_notification_channel_id"
-           android:value="high_importance_channel" />
+           android:value="native_shell_default_channel" />
        <meta-data
            android:name="com.google.firebase.messaging.default_notification_icon"
            android:resource="@mipmap/ic_launcher" />
