@@ -55,7 +55,7 @@ class BridgeEvent {
     print('Event was added');
   }
 
-  static bool removeEvent(String name, String id) {
+  static Future<bool> removeEvent(String name, String id) async {
     if (_eventsContainer?.isNotEmpty ?? false) {
       if (_eventsContainer!.containsKey(name)) {
         for (var event in _eventsContainer![name]!) {

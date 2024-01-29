@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:flutter_contacts/flutter_contacts.dart';
+
 import '/configurator.dart';
 import 'src/utils/initializer.dart';
 import 'package:flutter/material.dart';
