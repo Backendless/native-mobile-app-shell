@@ -157,6 +157,8 @@ class BridgeUIBuilderFunctions {
     if (result == null) {
       result = '_CANCELED BY USER';
     }
+
+    return result;
   }
 
   static Future<BackendlessUser?> _socialLogin(
