@@ -7,7 +7,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
 import '../utils/contacts_controller.dart';
 import '../utils/initializer.dart';
 import 'bridge.dart';
@@ -26,7 +25,6 @@ import '../push_notifications/message_notification.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'bridge_manager.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 class BridgeUIBuilderFunctions {
