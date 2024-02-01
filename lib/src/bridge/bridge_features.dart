@@ -1,9 +1,9 @@
-import 'package:native_app_shell_mobile/src/bridge/bridge_manager.dart';
-import 'package:native_app_shell_mobile/src/custom_features/custom_events.dart';
-import 'package:native_app_shell_mobile/src/custom_features/custom_methods.dart';
-import 'package:native_app_shell_mobile/src/system_features/system_events.dart';
-import 'package:native_app_shell_mobile/src/system_features/system_methods.dart';
-import 'package:native_app_shell_mobile/src/utils/request.dart';
+import '../bridge/bridge_manager.dart';
+import '../custom_features/custom_events.dart';
+import '../custom_features/custom_methods.dart';
+import '../system_features/system_events.dart';
+import '../system_features/system_methods.dart';
+import '../utils/request.dart';
 
 final bridgeMethods = {
   ...customMethods,

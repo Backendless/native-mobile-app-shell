@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:native_app_shell_mobile/src/bridge/bridge_features.dart';
+import '../bridge/bridge_features.dart';
 import '../utils/request.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 import '../utils/coder.dart';

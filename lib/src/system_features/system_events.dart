@@ -1,4 +1,4 @@
-import 'package:native_app_shell_mobile/src/bridge/bridge_ui_builder_functions.dart';
+import '../bridge/bridge_ui_builder_functions.dart';
 
 final systemEvents = {
   'ADD_LISTENER': BridgeUIBuilderFunctions.addListener,

@@ -1,4 +1,4 @@
-import 'package:native_app_shell_mobile/src/bridge/bridge_ui_builder_functions.dart';
+import '../bridge/bridge_ui_builder_functions.dart';
 
 final systemMethods = {
   'GET_CURRENT_LOCATION': BridgeUIBuilderFunctions.getCurrentLocation,
