@@ -68,6 +68,7 @@ class BridgeEvent {
               _eventsContainer!.remove(name);
             }
 
+            print('Event was removed');
             return true;
           }
         }
