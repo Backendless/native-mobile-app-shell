@@ -103,7 +103,7 @@ void main(List<String>? args) async {
       'com.backendless.native_app_shell', packageId);
 
   // SAVING PACKAGE_ID IN android/app/src/profile/AndroidManifest.xml
-  File newProfileManifest = File('android/app/src/main/AndroidManifest.xml');
+  File newProfileManifest = File('android/app/src/profile/AndroidManifest.xml');
   await newProfileManifest.writeAsString(profileManifestStr);
 
   // CHANGING DIRECTORIES FOR .MainActivity file
