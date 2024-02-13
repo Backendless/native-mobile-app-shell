@@ -3,7 +3,8 @@ import '../bridge/bridge_ui_builder_functions.dart';
 final systemMethods = {
   'GET_CURRENT_LOCATION': BridgeUIBuilderFunctions.getCurrentLocation,
   'GET_CONTACTS_LIST': BridgeUIBuilderFunctions.getContactsList,
-  'SAVE_CONTACT': BridgeUIBuilderFunctions.saveContact,
+  'CREATE_CONTACT': BridgeUIBuilderFunctions.createContact,
+  'UPDATE_CONTACT': BridgeUIBuilderFunctions.updateContact,
   'SHARE_SHEET_REQUEST': BridgeUIBuilderFunctions.shareSheet,
   'REGISTER_DEVICE': BridgeUIBuilderFunctions.registerDevice,
   'UNREGISTER_DEVICE': BridgeUIBuilderFunctions.unregisterDevice,

@@ -337,17 +337,30 @@ class BridgeUIBuilderFunctions {
     return contactsList;
   }
 
-  static Future<Contact> saveContact(Map? contactData) async {
-    Map<String, dynamic> parsedContactData = contactData!['contact'];
+  static Future<Contact> createContact(Map contactData) async {
+    Map<String, dynamic> parsedContactData =
+        await ContactsController.normalizeContact(contactData['contact']);
+
     Contact contact = Contact.fromJson(parsedContactData);
+
+    await ContactsController.requestContactPermissions();
+
+    return await FlutterContacts.insertContact(contact);
+  }
+
+  static Future<Contact> updateContact(Map contactData) async {
+    Map<String, dynamic> parsedContactData = contactData['contact'];
+    Contact contact = Contact.fromJson(parsedContactData);
+
+    await ContactsController.requestContactPermissions();
 
     bool isExists = await ContactsController.contactExists(contact);
 
     if (isExists) {
-      return await ContactsController.updateContact(contact);
+      return await FlutterContacts.updateContact(contact);
+    } else {
+      throw new ArgumentError('Contact with this id not exists');
     }
-
-    return await ContactsController.createNewContact(contact);
   }
 
   static Future<void> shareSheet(Map? data) async {
