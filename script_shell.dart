@@ -33,18 +33,19 @@ void main(List<String>? args) async {
   // RECEIVE ALL CUSTOM_COMPONENTS IN assets/ui_builder_app/components/custom/
 
   Directory directory = Directory('assets/ui_builder_app/components/custom/');
-  var customComponentsDirectories = await directory.list().toList();
-  String customComponentsLinks = '';
+  if (await directory.exists()) {
+    var customComponentsDirectories = await directory.list().toList();
+    String customComponentsLinks = '';
 
-  for (var folder in customComponentsDirectories) {
-    customComponentsLinks += '    - ${folder.path}\n';
+    for (var folder in customComponentsDirectories) {
+      customComponentsLinks += '    - ${folder.path}\n';
+    }
+    print('FOLDER LINKS:\n$customComponentsLinks');
+
+    // ADD CUSTOM_COMPONENTS LINKS IN pubspec.yaml
+    pubspecStr =
+        pubspecStr.replaceFirst('modules/', 'modules/\n$customComponentsLinks');
   }
-  print('FOLDER LINKS:\n$customComponentsLinks');
-
-  // ADD CUSTOM_COMPONENTS LINKS IN pubspec.yaml
-  pubspecStr =
-      pubspecStr.replaceFirst('modules/', 'modules/\n$customComponentsLinks');
-
   // RECEIVE ALL CUSTOM STYLES AND IMAGES IN assets/ui_builder_app/styles/
   directory = Directory('assets/ui_builder_app/styles/');
   var customStylesAndImagesFiles =
