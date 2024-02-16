@@ -111,7 +111,7 @@ void main(List<String>? args) async {
 
   // REMOVE OLD DIRECTORY
   Directory oldComDirectory = Directory('android/app/src/main/kotlin/com/');
-  oldComDirectory.delete(recursive: true);
+  await oldComDirectory.delete(recursive: true);
 
   // SPLIT PACKAGE_ID BY DOTS TO CREATE ANOTHER DIRECTORIES
   List<String> splitPackageId = packageId.split('.');
