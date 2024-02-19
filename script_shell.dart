@@ -94,7 +94,10 @@ void main(List<String>? args) async {
   mainManifestStr = mainManifestStr.replaceFirst(
       'com.backendless.native_app_shell', packageId);
 
-  // SAVING PACKAGE_ID IN android/app/src/main/AndroidManifest.xml FILE
+  // REPLACE APP_NAME IN android/app/src/main/AndroidManifest.xml
+  mainManifestStr = mainManifestStr.replaceFirst('native app shell', appName);
+
+  // SAVING PACKAGE_ID and APP_NAME IN android/app/src/main/AndroidManifest.xml FILE
   File newMainManifest = File('android/app/src/main/AndroidManifest.xml');
   await newMainManifest.writeAsString(mainManifestStr);
 
@@ -135,11 +138,14 @@ void main(List<String>? args) async {
 
   // WORKING WITH IOS DIRECTORY
 
-  // REPLACE BUNDLE_ID WITH PACKAGE_ID in ios/Runner/Info.plist
+  // REPLACE BUNDLE_ID WITH PACKAGE_ID IN ios/Runner/Info.plist
   String infoPlistStr = await infoPlist.readAsString();
   String iosStylePackageId = packageId.replaceAll('_', '-');
   infoPlistStr = infoPlistStr.replaceFirst(
       'com.backendless.native-app-shell', iosStylePackageId);
+
+  // REPLACE APP_NAME IN ios/Runner/Info.plist
+  infoPlistStr = infoPlistStr.replaceFirst('native app shell', appName);
 
   // SAVING Info.plist IN ios/Runner/Info.plist
   File newInfoPlist = File('ios/Runner/Info.plist');
