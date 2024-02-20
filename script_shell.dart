@@ -38,7 +38,8 @@ void main(List<String>? args) async {
     String customComponentsLinks = '';
 
     for (var folder in customComponentsDirectories) {
-      customComponentsLinks += '    - ${folder.path}\n';
+      customComponentsLinks += '    - ${folder.path}/\n';
+      customComponentsLinks += '    - ${folder.path}/dist/\n';
     }
     print('FOLDER LINKS:\n$customComponentsLinks');
 
