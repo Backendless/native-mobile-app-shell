@@ -32,23 +32,38 @@ void main(List<String>? args) async {
 
   // RECEIVE ALL CUSTOM_COMPONENTS IN assets/ui_builder_app/components/custom/
 
-  Directory directory = Directory('assets/ui_builder_app/components/custom/');
-  if (await directory.exists()) {
-    var customComponentsDirectories = await directory.list().toList();
-    String customComponentsLinks = '';
+  var directories =
+      await getNestedDirectory('assets/ui_builder_app/components/custom/');
+  String customComponentsLinks = '';
 
-    for (var folder in customComponentsDirectories) {
-      customComponentsLinks += '    - ${folder.path}/\n';
-      customComponentsLinks += '    - ${folder.path}/dist/\n';
+  if (directories.isNotEmpty) {
+    for (var dir in directories) {
+      customComponentsLinks += '\n    - $dir/';
     }
-    print('FOLDER LINKS:\n$customComponentsLinks');
-
-    // ADD CUSTOM_COMPONENTS LINKS IN pubspec.yaml
-    pubspecStr =
-        pubspecStr.replaceFirst('modules/', 'modules/\n$customComponentsLinks');
   }
+  print('Custom components links:\n$customComponentsLinks');
+
+  // ADD CUSTOM_COMPONENTS LINKS IN pubspec.yaml
+  pubspecStr =
+      pubspecStr.replaceFirst('modules/', 'modules/$customComponentsLinks');
+
+  // RECEIVE ALL CUSTOM LAYOUTS IN assets/ui_builder_app/layouts/
+  directories = await getNestedDirectory('assets/ui_builder_app/layouts');
+
+  var customLayoutsLinks = '';
+  if (directories.isNotEmpty) {
+    for (var dir in directories) {
+      customLayoutsLinks += '\n    - $dir/';
+    }
+  }
+  print('Custom layouts links:\n$customLayoutsLinks');
+
+  // ADD CUSTOM LAYOUTS IN assets/ui_builder_app/layouts/
+  pubspecStr =
+      pubspecStr.replaceFirst('modules/', 'modules/$customLayoutsLinks');
+
   // RECEIVE ALL CUSTOM STYLES AND IMAGES IN assets/ui_builder_app/styles/
-  directory = Directory('assets/ui_builder_app/styles/');
+  var directory = Directory('assets/ui_builder_app/styles/');
   var customStylesAndImagesFiles =
       await directory.list(recursive: true).toList();
 
@@ -162,4 +177,25 @@ void main(List<String>? args) async {
   await newProjectPbxproj.writeAsString(projectPbxprojStr);
 
   print('DONE');
+}
+
+Future<List<String>> getNestedDirectory(String path) async {
+  var dir = Directory(path);
+  List<String> result = List.empty(growable: true);
+
+  if (await dir.exists()) {
+    var directories = await dir.list().toList();
+
+    for (var folder in directories) {
+      if (folder is Directory) {
+        result.add(folder.path);
+        var nested = await getNestedDirectory(folder.path);
+        if (nested.isNotEmpty) {
+          result.addAll(nested);
+        }
+      }
+    }
+  }
+
+  return result;
 }
