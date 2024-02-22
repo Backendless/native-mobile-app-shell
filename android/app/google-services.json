@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "559083352946",
-    "project_id": "my-app",
-    "storage_bucket": "my-app.appspot.com"
+    "project_id": "native-app-shell",
+    "storage_bucket": "native-app-shell.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "empty_value",
         "android_client_info": {
-          "package_name": "com.back.my_app"
+          "package_name": "com.backendless.native_app_shell"
         }
       }
     }
