@@ -66,7 +66,7 @@ class BridgeManager {
           'lat': response.latitude,
           'lng': response.longitude,
         };
-      } else if (response is DeviceRegistration) {
+      } else if (response is DeviceRegistrationResult) {
         finalResult['payload']['result'] = response.toJson();
       } else if (response is Contact) {
         Map mappedElement = response.toJson();
