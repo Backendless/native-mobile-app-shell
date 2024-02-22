@@ -13,6 +13,7 @@ void main(List<String>? args) async {
       'config_sources/com/backendless/native_app_shell_mobile/config_MainActivity.kt');
   File infoPlist = File('config_sources/config_Info.plist');
   File projectPbxproj = File('config_sources/config_project.pbxproj');
+  File googleServices = File('android/app/google-services.json');
 
   if (args?.isEmpty ?? true) {
     print(
@@ -176,7 +177,21 @@ void main(List<String>? args) async {
   File newProjectPbxproj = File('ios/Runner.xcodeproj/project.pbxproj');
   await newProjectPbxproj.writeAsString(projectPbxprojStr);
 
+  // CHECKING google-services.json in android/app/google-services.json
+  String googleServicesStr = await googleServices.readAsString();
+
+  if (googleServicesStr.contains('com.backendless.native_app_shell')) {
+    googleServicesStr = googleServicesStr.replaceFirst(
+        'com.backendless.native_app_shell', packageId);
+    var temp = iosStylePackageId.split('.').last;
+    googleServicesStr = googleServicesStr.replaceAll('native-app-shell', temp);
+
+    await googleServices.writeAsString(googleServicesStr);
+  }
+
   print('DONE');
+  print(
+      'IMPORTANT: If you want to use push-notifications. You need to create your own project in [https://console.firebase.google.com/] and replace google-services.json file in android/app with your own');
 }
 
 Future<List<String>> getNestedDirectory(String path) async {
