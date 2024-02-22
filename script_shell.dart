@@ -78,7 +78,6 @@ void main(List<String>? args) async {
   // ADD CUSTOM STYLES LINKS IN pubspec.yaml
   pubspecStr = pubspecStr.replaceFirst(
       '      fonts:', '      fonts:\n$customStylesLinks');
-  print(pubspecStr);
 
   // SAVE CHANGES TO pubspec.yaml
   File newPubspec = File('pubspec.yaml');
@@ -189,9 +188,9 @@ void main(List<String>? args) async {
     await googleServices.writeAsString(googleServicesStr);
   }
 
-  print('DONE');
   print(
-      'IMPORTANT: If you want to use push-notifications. You need to create your own project in [https://console.firebase.google.com/] and replace google-services.json file in android/app with your own');
+      'IMPORTANT:\nThe script has updated google-services.json located in the ./android/app directory. If you plan on using Android push notifications, it is important to update that file. Please follow the instructions from the Backendless documentation located at: https://backendless.com/docs/uibuilder/ui_configuring_flutter_shell.html#android-push-notifications-configuration');
+  print('DONE');
 }
 
 Future<List<String>> getNestedDirectory(String path) async {
