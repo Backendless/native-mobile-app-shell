@@ -18,7 +18,7 @@ void main(List<String>? args) async {
   if (args?.isEmpty ?? true) {
     print(
         'Please set application name like a first parameter and package name as second parameter. Example:\n'
-        './script_shell.dart MyNewApplication com.example.myNewApplication');
+        './projectsetup.dart MyNewApplication com.example.myNewApplication');
     return;
   }
 
