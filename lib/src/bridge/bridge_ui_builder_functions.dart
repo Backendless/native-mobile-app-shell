@@ -1,9 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../utils/contacts_controller.dart';
 import '../utils/initializer.dart';
+import 'bridge.dart';
 import 'bridge_event.dart';
 import '../utils/geo_controller.dart';
 import 'package:flutter/material.dart';
@@ -14,28 +20,83 @@ import '../types/push_notification_message.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
-import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import '../push_notifications/message_notification.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'bridge_manager.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 class BridgeUIBuilderFunctions {
   static const GOOGLE_CLIENT_ID_IOS = 'xxxxxx.apps.googleusercontent.com';
   static const GOOGLE_CLIENT_ID_WEB = 'xxxxxx.apps.googleusercontent.com';
 
+  static StreamController<bool> onTapEventInitializeController =
+      StreamController.broadcast();
   static late LocationPermission permission;
+  static PackageInfo? info;
 
-  static Future<void> addListener(BridgeEvent event) async {
+  static Future<BridgeEvent> createBridgeEventFromMap(
+      Map? data, JavaScriptReplyProxy replier) async {
+    String eventName = data!['event'];
+    String eventId = data['id'];
+
+    BridgeEvent event = BridgeEvent(
+      eventId,
+      eventName,
+      replier,
+    );
+
+    return event;
+  }
+
+  static Future<void> addListener(
+      Map? mapEvent, JavaScriptReplyProxy jsResponseProxy) async {
+    BridgeEvent event = await BridgeUIBuilderFunctions.createBridgeEventFromMap(
+        mapEvent!, jsResponseProxy);
+
     if (event.isExist) throw Exception('Event with same id already exists');
 
     BridgeEvent.addToContainer(event);
   }
 
-  static Future<bool> removeListener(String name, String id) async {
-    return BridgeEvent.removeEvent(name, id);
+  static Future<bool> removeListener(
+      Map data, JavaScriptReplyProxy jsResponseProxy) async {
+    String eventName = data['event'];
+    String eventId = data['id'];
+
+    return await BridgeEvent.removeEvent(eventName, eventId);
+  }
+
+  static Future<dynamic> registerDevice(Map? data) async {
+    await Permission.notification.request();
+
+    List<String> targetChannels = ['default'];
+
+    if (data!['channels'] != null) {
+      targetChannels = List<String>.from(data['channels']);
+    }
+
+    return await BridgeUIBuilderFunctions.registerForPushNotifications(
+        channels: targetChannels);
+  }
+
+  static Future<void> tapOnPushAction(
+      Map? data, JavaScriptReplyProxy jsResponseProxy) async {
+    await BridgeUIBuilderFunctions.addListener(data!, jsResponseProxy);
+
+    if (!onTapEventInitializeController.isClosed) {
+      onTapEventInitializeController.add(true);
+    }
+  }
+
+  static Future<bool> unregisterDevice(Map? payload) async {
+    return await Backendless.messaging.unregisterDevice();
+  }
+
+  static Future<DeviceRegistration?> getDeviceRegistrations(
+      Map? payload) async {
+    return await Backendless.messaging.getDeviceRegistration();
   }
 
   static Future<dynamic> registerForPushNotifications({
@@ -72,7 +133,35 @@ class BridgeUIBuilderFunctions {
     }
   }
 
-  static Future<BackendlessUser?> socialLogin(
+  static Future<dynamic> socialLogin(Map? data) async {
+    var result;
+
+    if (data!['providerCode'] == 'apple') {
+      if (Platform.isAndroid) return result = '_UNSUPPORTED FOR THIS PLATFORM';
+      final credential = await SignInWithApple.getAppleIDCredential(
+          scopes: [
+            AppleIDAuthorizationScopes.email,
+            AppleIDAuthorizationScopes.fullName,
+          ],
+          webAuthenticationOptions: WebAuthenticationOptions(
+            clientId: data['options']['clientId'],
+            redirectUri: Uri(),
+          ));
+      result = await Backendless.customService.invoke(
+          'AppleAuth', 'login', credential.identityToken); //get your user
+      result = BackendlessUser.fromJson(result);
+    } else {
+      result = await BridgeUIBuilderFunctions._socialLogin(
+          data['providerCode'], Bridge.currentContext!);
+    }
+    if (result == null) {
+      result = '_CANCELED BY USER';
+    }
+
+    return result;
+  }
+
+  static Future<BackendlessUser?> _socialLogin(
       String providerCode, BuildContext context,
       {Map<String, String>? fieldsMappings, List<String>? scope}) async {
     BackendlessUser? user;
@@ -190,7 +279,36 @@ class BridgeUIBuilderFunctions {
     return user;
   }
 
-  static Future<Position?> getCurrentLocation() async {
+  static Future<String> getRunningEnvironment(Map? payload) async {
+    return 'NATIVE_SHELL';
+  }
+
+  static Future<Map> getAppInfo(Map? payload) async {
+    var result;
+    if (info == null) {
+      info = await PackageInfo.fromPlatform();
+    }
+
+    if (info != null) {
+      result = {
+        'appName': info!.appName,
+        'packageName': info!.packageName,
+        'version': info!.version,
+        'buildNumber': info!.buildNumber,
+        'buildSignature': info!.buildSignature,
+      };
+    }
+
+    return result;
+  }
+
+  static Future<String> requestCameraPermissions(Map? payload) async {
+    PermissionStatus status = await Permission.camera.request();
+
+    return status.name;
+  }
+
+  static Future<Position?> getCurrentLocation(Map? payload) async {
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -213,13 +331,60 @@ class BridgeUIBuilderFunctions {
     return await GeoController.getCurrentLocation();
   }
 
-  static Future<List<Contact>?> getContactList() async {
+  static Future<List<Contact>?> getContactsList(Map? payload) async {
     var contactsList = await ContactsController.getContactsList();
 
     return contactsList;
   }
 
-  static Future<void> setAccelerometerEvent(BridgeEvent bridgeEvent) async {
+  static Future<Contact> createContact(Map contactData) async {
+    Map<String, dynamic> parsedContactData =
+        await ContactsController.normalizeContact(contactData['contact']);
+
+    Contact contact = Contact.fromJson(parsedContactData);
+
+    await ContactsController.requestContactPermissions();
+
+    return await FlutterContacts.insertContact(contact);
+  }
+
+  static Future<Contact> updateContact(Map contactData) async {
+    Map<String, dynamic> parsedContactData = contactData['contact'];
+    Contact contact = Contact.fromJson(parsedContactData);
+
+    await ContactsController.requestContactPermissions();
+
+    bool isExists = await ContactsController.contactExists(contact);
+
+    if (isExists) {
+      return await FlutterContacts.updateContact(contact);
+    } else {
+      throw new ArgumentError('Contact with this id not exists');
+    }
+  }
+
+  static Future<void> shareSheet(Map? data) async {
+    String? message = data!['message'];
+    String? resourceName = data['resourceName'];
+    String? link = data['link'];
+
+    if (link?.isNotEmpty ?? false) {
+      if (message != null) {
+        link = '$message\n$link';
+      }
+
+      await Share.share(link!, subject: resourceName);
+    }
+
+    throw Exception('Link to share cannot be null');
+  }
+
+  static Future<void> setAccelerometerEvent(
+      Map data, JavaScriptReplyProxy jsResponseProxy) async {
+    BridgeEvent bridgeEvent =
+        await createBridgeEventFromMap(data, jsResponseProxy);
+    await addListener(data, jsResponseProxy);
+
     accelerometerEventStream(samplingPeriod: SensorInterval.normalInterval)
         .listen((event) {
       BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
@@ -229,7 +394,12 @@ class BridgeUIBuilderFunctions {
     });
   }
 
-  static Future<void> setMagnetometerEvent(BridgeEvent bridgeEvent) async {
+  static Future<void> setMagnetometerEvent(
+      Map data, JavaScriptReplyProxy jsResponseProxy) async {
+    BridgeEvent bridgeEvent =
+        await createBridgeEventFromMap(data, jsResponseProxy);
+    await addListener(data, jsResponseProxy);
+
     magnetometerEventStream(samplingPeriod: SensorInterval.normalInterval)
         .listen((event) {
       BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
@@ -239,7 +409,12 @@ class BridgeUIBuilderFunctions {
     });
   }
 
-  static Future<void> setGyroscopeEvent(BridgeEvent bridgeEvent) async {
+  static Future<void> setGyroscopeEvent(
+      Map data, JavaScriptReplyProxy jsResponseProxy) async {
+    BridgeEvent bridgeEvent =
+        await createBridgeEventFromMap(data, jsResponseProxy);
+    await addListener(data, jsResponseProxy);
+
     gyroscopeEventStream(samplingPeriod: SensorInterval.normalInterval).listen(
         (event) {
       BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
@@ -249,7 +424,12 @@ class BridgeUIBuilderFunctions {
     });
   }
 
-  static Future<void> setUserAccelerometerEvent(BridgeEvent bridgeEvent) async {
+  static Future<void> setUserAccelerometerEvent(
+      Map data, JavaScriptReplyProxy jsResponseProxy) async {
+    BridgeEvent bridgeEvent =
+        await createBridgeEventFromMap(data, jsResponseProxy);
+    await addListener(data, jsResponseProxy);
+
     userAccelerometerEventStream(samplingPeriod: SensorInterval.normalInterval)
         .listen((event) {
       BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
@@ -298,7 +478,7 @@ class BridgeUIBuilderFunctions {
       await BridgeEvent.dispatchEventsByName(
           'TAP_PUSH_ACTION', {'data': headers});
     } else {
-      BridgeManager.onTapEventInitializeController.stream.listen((event) async {
+      onTapEventInitializeController.stream.listen((event) async {
         if (event) {
           await Future.delayed(Duration(milliseconds: 500));
 
@@ -308,7 +488,7 @@ class BridgeUIBuilderFunctions {
                   ? ShellInitializer.waitingInitializationData
                   : headers
             });
-            await BridgeManager.onTapEventInitializeController.close();
+            await onTapEventInitializeController.close();
           }
         }
       });

@@ -8,6 +8,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class Bridge {
   late InAppWebViewController controller;
+  static late BuildContext? currentContext;
 
   Bridge({required this.controller});
 
@@ -16,11 +17,12 @@ class Bridge {
         jsObjectName: 'UI_BUILDER_WEB_MESSAGE_LISTENER_OBJECT',
         allowedOriginRules: Set.from(['*']),
         onPostMessage: (message, sourceOrigin, isMainFrame, replyProxy) async {
+          currentContext = context;
+
           String? result;
           try {
             print('got data from codeless: $message');
             Map data = await jsonDecode(message!);
-            data['_context'] = context;
 
             var systemEvent =
                 await BridgeValidator.hasSystemEvent(data['event']);
@@ -42,7 +44,8 @@ class Bridge {
             }
 
             if (data['payload']['type'] == 'ON_TAP_EVENT_INITIALIZED') {
-              await BridgeManager.onTapEventInitializeController.close();
+              await BridgeUIBuilderFunctions.onTapEventInitializeController
+                  .close();
             }
 
             if (result.contains('_UNSUPPORTED FOR THIS PLATFORM')) {
