@@ -11,7 +11,12 @@
         "android_client_info": {
           "package_name": "com.backendless.native_app_shell"
         }
-      }
+      },
+      "api_key": [
+        {
+          "current_key": "empty_value"
+        }
+      ]
     }
   ],
   "configuration_version": "1"

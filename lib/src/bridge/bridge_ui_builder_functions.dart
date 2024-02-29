@@ -341,7 +341,17 @@ class BridgeUIBuilderFunctions {
     Map<String, dynamic> parsedContactData =
         await ContactsController.normalizeContact(contactData['contact']);
 
-    Contact contact = Contact.fromJson(parsedContactData);
+    Contact contact = Contact(
+      displayName: parsedContactData['displayName'],
+      accounts: parsedContactData['account'],
+      photo: parsedContactData['photo'],
+      events: parsedContactData['events'],
+      name: parsedContactData['name'],
+      organizations: parsedContactData['organizations'],
+      addresses: parsedContactData['addresses'],
+      emails: parsedContactData['emails'],
+      phones: parsedContactData['phones'],
+    );
 
     await ContactsController.requestContactPermissions();
 
