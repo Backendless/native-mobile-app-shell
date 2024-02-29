@@ -60,8 +60,7 @@ class BridgeUIBuilderFunctions {
     BridgeEvent.addToContainer(event);
   }
 
-  static Future<bool> removeListener(
-      Map data, JavaScriptReplyProxy jsResponseProxy) async {
+  static Future<bool> removeListener(Map data) async {
     String eventName = data['event'];
     String eventId = data['id'];
 
@@ -396,8 +395,8 @@ class BridgeUIBuilderFunctions {
     await addListener(data, jsResponseProxy);
 
     accelerometerEventStream(samplingPeriod: SensorInterval.normalInterval)
-        .listen((event) {
-      BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
+        .listen((event) async {
+      await BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
           {'x': '${event.x}', 'y': '${event.y}', 'z': '${event.z}'});
     }, onError: (error) {
       print('Error in \'accelerometer event\' has appeared:$error');
@@ -411,8 +410,8 @@ class BridgeUIBuilderFunctions {
     await addListener(data, jsResponseProxy);
 
     magnetometerEventStream(samplingPeriod: SensorInterval.normalInterval)
-        .listen((event) {
-      BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
+        .listen((event) async {
+      await BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
           {'x': '${event.x}', 'y': '${event.y}', 'z': '${event.z}'});
     }, onError: (error) {
       print('Error in \'magnetometer event\' has appeared:$error');
@@ -426,8 +425,8 @@ class BridgeUIBuilderFunctions {
     await addListener(data, jsResponseProxy);
 
     gyroscopeEventStream(samplingPeriod: SensorInterval.normalInterval).listen(
-        (event) {
-      BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
+        (event) async {
+      await BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
           {'x': '${event.x}', 'y': '${event.y}', 'z': '${event.z}'});
     }, onError: (error) {
       print('Error in \'gyroscope event\' has appeared');
@@ -441,8 +440,8 @@ class BridgeUIBuilderFunctions {
     await addListener(data, jsResponseProxy);
 
     userAccelerometerEventStream(samplingPeriod: SensorInterval.normalInterval)
-        .listen((event) {
-      BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
+        .listen((event) async {
+      await BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
           {'x': '${event.x}', 'y': '${event.y}', 'z': '${event.z}'});
     }, onError: (error) {
       print('Error in \'gyroscope event\' has appeared');

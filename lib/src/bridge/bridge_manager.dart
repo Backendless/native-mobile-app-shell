@@ -26,12 +26,8 @@ class BridgeManager {
       var result;
       Map? customPayload = data['payload']['options'];
 
-      if (customPayload != null && customPayload.isNotEmpty) {
-        if (customPayload.containsKey('event') &&
-            customPayload.containsKey('id')) {
-          return await listenerReceiver(
-              request, customPayload, jsResponseProxy);
-        }
+      if (request.operationName == 'ADD_LISTENER' && customPayload != null) {
+        return await listenerReceiver(request, customPayload, jsResponseProxy);
       }
 
       return await methodReceiver(request, customPayload);

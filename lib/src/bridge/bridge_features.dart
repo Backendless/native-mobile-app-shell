@@ -5,14 +5,14 @@ import '../system_features/system_events.dart';
 import '../system_features/system_methods.dart';
 import '../utils/request.dart';
 
-final bridgeMethods = {
+final dynamic bridgeMethods = {
   ...customMethods,
   ...systemMethods,
 };
 
-final bridgeEvents = {
-  ...systemEvents,
+final dynamic bridgeEvents = {
   ...customEvents,
+  ...systemEvents,
 };
 
 Future<String> methodReceiver(Request requestContainer, Map? payload) async {
@@ -31,7 +31,11 @@ Future<String> methodReceiver(Request requestContainer, Map? payload) async {
 
 Future<String> listenerReceiver(
     Request requestContainer, Map payload, jsResponseProxy) async {
-  final processor = bridgeEvents[requestContainer.operationName];
+  if (payload['event'] == null || payload['id'] == null) {
+    throw new Exception('Failed to create event. Name or Id cannot be null');
+  }
+
+  final processor = bridgeEvents[payload['event']];
 
   if (processor == null) {
     throw new Exception(

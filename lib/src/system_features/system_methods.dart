@@ -1,6 +1,7 @@
 import '../bridge/bridge_ui_builder_functions.dart';
 
 final systemMethods = {
+  'REMOVE_LISTENER': BridgeUIBuilderFunctions.removeListener,
   'GET_CURRENT_LOCATION': BridgeUIBuilderFunctions.getCurrentLocation,
   'GET_CONTACTS_LIST': BridgeUIBuilderFunctions.getContactsList,
   'CREATE_CONTACT': BridgeUIBuilderFunctions.createContact,

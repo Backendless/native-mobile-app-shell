@@ -1,1 +1,1 @@
-const customMethods = {};
+final customMethods = {};
