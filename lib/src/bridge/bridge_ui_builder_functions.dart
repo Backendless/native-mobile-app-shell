@@ -359,6 +359,18 @@ class BridgeUIBuilderFunctions {
 
   static Future<Contact> updateContact(Map contactData) async {
     Map<String, dynamic> parsedContactData = contactData['contact'];
+    String? photo = parsedContactData['photo'];
+    String? thumbnail = parsedContactData['thumbnail'];
+    if (photo?.isNotEmpty ?? false) {
+      photo = photo!.substring(photo.indexOf('base64,') + 7);
+      parsedContactData['photo'] = base64Decode(photo);
+    }
+
+    if ((parsedContactData['thumbnail'] as String?)?.isNotEmpty ?? false) {
+      thumbnail = thumbnail!.substring(thumbnail.indexOf('base64,') + 7);
+      parsedContactData['thumbnail'] = base64Decode(thumbnail);
+    }
+
     Contact contact = Contact.fromJson(parsedContactData);
 
     await ContactsController.requestContactPermissions();

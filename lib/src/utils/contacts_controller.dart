@@ -12,7 +12,7 @@ class ContactsController {
     await requestContactPermissions();
 
     return await FlutterContacts.getContacts(
-        withPhoto: true, withAccounts: true);
+        withPhoto: true, withAccounts: true, withProperties: true);
   }
 
   static Future<bool> contactExists(Contact contact) async {
