@@ -58,18 +58,18 @@ class ContactsController {
 
     List<Phone> phones = List<Phone>.empty(growable: true);
     if ((contact['phones'] as List?)?.isNotEmpty ?? false) {
-      (contact['phones'] as List?)!.map((e) => phones.add(Phone(e)));
+      phones = (contact['phones'] as List).map((e) => Phone(e)).toList();
     }
 
     List<Email> emails = List<Email>.empty(growable: true);
     if ((contact['emails'] as List?)?.isNotEmpty ?? false) {
-      (contact['emails'] as List?)!.map((e) => emails.add(Email(e)));
+      emails = (contact['emails'] as List).map((e) => Email(e)).toList();
     }
 
     List<Address> address = List<Address>.empty(growable: true);
     if ((contact['postalAddresses'] as List?)?.isNotEmpty ?? false) {
-      (contact['postalAddresses'] as List?)!
-          .map((e) => address.add(Address(e)));
+      address =
+          (contact['postalAddresses'] as List).map((e) => Address(e)).toList();
     }
 
     List<Organization> organizations = List<Organization>.empty(growable: true);
