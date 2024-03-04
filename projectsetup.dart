@@ -230,10 +230,11 @@ void main(List<String> args) async {
         googleServicesStr.replaceAll('native-app-shell', nameFromPackageId);
 
     await googleServices.writeAsString(googleServicesStr);
+
+    print(
+        'IMPORTANT:\nThe script has updated google-services.json located in the ./android/app directory. If you plan on using Android push notifications, it is important to update that file. Please follow the instructions from the Backendless documentation located at: https://backendless.com/docs/uibuilder/ui_configuring_flutter_shell.html#android-push-notifications-configuration');
   }
 
-  print(
-      'IMPORTANT:\nThe script has updated google-services.json located in the ./android/app directory. If you plan on using Android push notifications, it is important to update that file. Please follow the instructions from the Backendless documentation located at: https://backendless.com/docs/uibuilder/ui_configuring_flutter_shell.html#android-push-notifications-configuration');
   print('\nDONE');
 }
 
