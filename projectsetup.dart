@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-void main(List<String>? args) async {
+void main(List<String> args) async {
   File pubspec = File('config_sources/config_pubspec.yaml');
   File appBuildGradle = File('config_sources/config_build.gradle');
   File debugManifest = File('config_sources/config_debugAndroidManifest.xml');
@@ -14,18 +14,48 @@ void main(List<String>? args) async {
   File infoPlist = File('config_sources/config_Info.plist');
   File projectPbxproj = File('config_sources/config_project.pbxproj');
   File googleServices = File('android/app/google-services.json');
+  final regExp = RegExp(r'[\^$*.\[\]{}()?\-"!@#%&/\,><:;~`+='
+      "'"
+      ']');
 
-  if (args?.isEmpty ?? true) {
-    print(
-        'Please set application name like a first parameter and package name as second parameter. Example:\n'
-        './projectsetup.dart MyNewApplication com.example.myNewApplication');
+  String? appName;
+  String? packageId;
+
+  try {
+    appName = args[0];
+    packageId = args[1];
+  } catch (ex) {}
+
+  if ((appName?.isEmpty ?? true) || (packageId?.isEmpty ?? true)) {
+    print('''
+      Unable to run the project setup script. Make sure the command includes two additional arguments as shown below:
+    
+      dart run ./projectsetup.dart AppName com.example.myApp
+      
+      where:
+      AppName            - name of your application (without any spaces or special characters(excluding the underscore))
+      com.example.myApp - application namespace. Use the dot-notation in the format of com.companyName.AppName
+        ''');
+
     return;
   }
 
-  String appName = args![0];
-  String packageId = args[1];
-  print('APPNAME: $appName');
-  print('PACKAGE_ID: $packageId');
+  if (appName!.contains(regExp)) {
+    print('AppName must not contain special symbols(excluding the underscore)');
+
+    return;
+  }
+
+  if (!packageId!.startsWith('com')) {
+    print('packageId(second parameter) should start with \'com\'\n'
+        'example:\n'
+        'dart run ./projectsetup.dart AppName com.example.myApp');
+
+    return;
+  }
+
+  print('Application Name: $appName');
+  print('PackageId: $packageId');
 
   // REPLACE APP_NAME IN pubspec.yaml
   String pubspecStr = await pubspec.readAsString();
@@ -39,10 +69,15 @@ void main(List<String>? args) async {
 
   if (directories.isNotEmpty) {
     for (var dir in directories) {
+      if (dir.contains('\\')) {
+        dir = dir.replaceAll('\\', '/');
+      }
       customComponentsLinks += '\n    - $dir/';
     }
+    print('Custom components links: $customComponentsLinks');
+  } else {
+    print('Custom components links:\n\tN/A');
   }
-  print('Custom components links:\n$customComponentsLinks');
 
   // ADD CUSTOM_COMPONENTS LINKS IN pubspec.yaml
   pubspecStr =
@@ -54,10 +89,15 @@ void main(List<String>? args) async {
   var customLayoutsLinks = '';
   if (directories.isNotEmpty) {
     for (var dir in directories) {
+      if (dir.contains('\\')) {
+        dir = dir.replaceAll('\\', '/');
+      }
       customLayoutsLinks += '\n    - $dir/';
     }
+    print('Custom layouts links:$customLayoutsLinks');
+  } else {
+    print('Custom layouts links:\n\tN/A');
   }
-  print('Custom layouts links:\n$customLayoutsLinks');
 
   // ADD CUSTOM LAYOUTS IN assets/ui_builder_app/layouts/
   pubspecStr =
@@ -71,7 +111,11 @@ void main(List<String>? args) async {
   String customStylesLinks = '';
 
   for (var style in customStylesAndImagesFiles) {
-    customStylesLinks += '        - asset: ${style.path}\n';
+    String stringifiedStyle = style.path;
+    if (stringifiedStyle.contains('\\')) {
+      stringifiedStyle = stringifiedStyle.replaceAll('\\', '/');
+    }
+    customStylesLinks += '        - asset: $stringifiedStyle\n';
   }
 
   print('STYLES LINKS:\n$customStylesLinks');
@@ -83,7 +127,7 @@ void main(List<String>? args) async {
   File newPubspec = File('pubspec.yaml');
   await newPubspec.writeAsString(pubspecStr);
 
-  // _______________-________________-____________--_____
+  // _______________-________________-____________-______
 
   // WORKING WITH ANDROID DIRECTORY
 
@@ -140,8 +184,7 @@ void main(List<String>? args) async {
     currentPath += '$item/';
   }
 
-  Directory newDirectoryForMainActivity =
-      await Directory(currentPath).create(recursive: true);
+  await Directory(currentPath).create(recursive: true);
 
   // REPLACE PACKAGE_ID in MainActivity file
   String mainActivityStr = await mainActivity.readAsString();
@@ -182,15 +225,16 @@ void main(List<String>? args) async {
   if (googleServicesStr.contains('com.backendless.native_app_shell')) {
     googleServicesStr = googleServicesStr.replaceFirst(
         'com.backendless.native_app_shell', packageId);
-    var temp = iosStylePackageId.split('.').last;
-    googleServicesStr = googleServicesStr.replaceAll('native-app-shell', temp);
+    var nameFromPackageId = iosStylePackageId.split('.').last;
+    googleServicesStr =
+        googleServicesStr.replaceAll('native-app-shell', nameFromPackageId);
 
     await googleServices.writeAsString(googleServicesStr);
   }
 
   print(
       'IMPORTANT:\nThe script has updated google-services.json located in the ./android/app directory. If you plan on using Android push notifications, it is important to update that file. Please follow the instructions from the Backendless documentation located at: https://backendless.com/docs/uibuilder/ui_configuring_flutter_shell.html#android-push-notifications-configuration');
-  print('DONE');
+  print('\nDONE');
 }
 
 Future<List<String>> getNestedDirectory(String path) async {
