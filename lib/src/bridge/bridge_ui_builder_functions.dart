@@ -3,7 +3,11 @@ import 'dart:convert';
 import 'dart:io' as io;
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
+import 'package:native_app_shell_mobile/src/payment_service/shell_apple_pay.dart';
+import 'package:native_app_shell_mobile/src/payment_service/shell_google_pay.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pay/pay.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -35,6 +39,7 @@ class BridgeUIBuilderFunctions {
       StreamController.broadcast();
   static late LocationPermission permission;
   static PackageInfo? info;
+  static var _payObject;
 
   static Future<BridgeEvent> createBridgeEventFromMap(
       Map? data, JavaScriptReplyProxy replier) async {
@@ -394,10 +399,101 @@ class BridgeUIBuilderFunctions {
         link = '$message\n$link';
       }
 
-      await Share.share(link!, subject: resourceName);
+      return await Share.share(link!, subject: resourceName);
     }
 
     throw Exception('Link to share cannot be null');
+  }
+
+  static Future<void> googlePayInit(Map data) async {
+    var configurationJson = data['configuration'];
+    PaymentConfiguration configObj = PaymentConfiguration.fromJsonString(configurationJson);
+    var t = '''
+    {
+      "provider" : "google_pay",
+      "data" : {
+        "environment" : "TEST",
+        "apiVersion" : 2,
+        "apiVersionMinor" : 0,
+        "allowedPaymentMethods" : [
+          {
+            "type" : "CARD",
+            "parameters" : {
+              "allowedCardNetworks" : [
+                "VISA",
+                "MASTERCARD"
+              ],
+              "allowedAuthMethods" : [
+                "PAN_ONLY",
+                "CRYPTOGRAM_3DS"
+              ]
+            }
+          }
+        ],
+        "merchantInfo" : {
+          "merchantId" : "5345087610",
+          "merchantName" : "testappflutt"
+        },
+        "transactionInfo" : {
+          "countryCode" : "US",
+          "currencyCode" : "USD"
+        }
+      }
+    }
+    ''';
+    _payObject = ShellGooglePay(configObj);
+  }
+
+  static Future<void> applePayInit(Map data) async {
+    var configurationJson = data['configuration'];
+    PaymentConfiguration configObj = PaymentConfiguration.fromJsonString(configurationJson);
+    _payObject = ShellApplePay(configObj);
+  }
+
+  static Future<void> googlePayRequest(Map data) async {
+    var paymentItemsMap = data['paymentItems'];
+    List<PaymentItem> paymentItemsEntity = List.of((paymentItemsMap as List).map((e) => PaymentItem(amount: e['amount'], label: e['label'])));
+
+    if(_payObject == null) {
+      throw Exception('Google Pay Service must be initialized before pay request');
+    }
+
+    bool canPay = await (_payObject as ShellGooglePay).userCanPay();
+
+    if(canPay) {
+      try {
+        var res = await (_payObject as ShellGooglePay).pay(paymentItemsEntity);
+        print(res);
+      } catch(ex) {
+        if(ex is PlatformException) {
+          if(ex.code == '10') {
+            throw Exception("This merchant is currently unable to accept payments using this payment method. Try a different payment method.");
+          }
+        } else {
+          print(ex);
+        }
+      }
+    } else {
+      print('cannot pay');
+    }
+  }
+
+  static Future<void> applePayRequest(Map data) async {
+    var paymentItemsMap = data['paymentItems'];
+    List<PaymentItem> paymentItemsEntity = List.of((paymentItemsMap as List).map((e) => PaymentItem(amount: e['amount'], label: e['label'])));
+
+    if(_payObject == null) {
+      throw Exception('Apple Pay Service must be initialized before pay request');
+    }
+
+    bool canPay = await (_payObject as ShellApplePay).userCanPay();
+
+    if(canPay) {
+      var res = await (_payObject as ShellApplePay).pay(paymentItemsEntity);
+      print(res);
+    } else {
+      print('cannot pay');
+    }
   }
 
   static Future<void> setAccelerometerEvent(

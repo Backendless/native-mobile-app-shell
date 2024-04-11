@@ -14,5 +14,9 @@ final systemMethods = {
   'GET_RUNNING_ENV': BridgeUIBuilderFunctions.getRunningEnvironment,
   'GET_APP_INFO': BridgeUIBuilderFunctions.getAppInfo,
   'REQUEST_CAMERA_PERMISSIONS':
-      BridgeUIBuilderFunctions.requestCameraPermissions
+      BridgeUIBuilderFunctions.requestCameraPermissions,
+  'GOOGLE_PAY_INIT' : BridgeUIBuilderFunctions.googlePayInit,
+  'APPLE_PAY_INIT' : BridgeUIBuilderFunctions.applePayInit,
+  'GOOGLE_PAY_REQUEST' : BridgeUIBuilderFunctions.googlePayRequest,
+  'APPLE_PAY_REQUEST' : BridgeUIBuilderFunctions.applePayRequest,
 };
