@@ -408,39 +408,7 @@ class BridgeUIBuilderFunctions {
   static Future<void> googlePayInit(Map data) async {
     var configurationJson = data['configuration'];
     PaymentConfiguration configObj = PaymentConfiguration.fromJsonString(configurationJson);
-    var t = '''
-    {
-      "provider" : "google_pay",
-      "data" : {
-        "environment" : "TEST",
-        "apiVersion" : 2,
-        "apiVersionMinor" : 0,
-        "allowedPaymentMethods" : [
-          {
-            "type" : "CARD",
-            "parameters" : {
-              "allowedCardNetworks" : [
-                "VISA",
-                "MASTERCARD"
-              ],
-              "allowedAuthMethods" : [
-                "PAN_ONLY",
-                "CRYPTOGRAM_3DS"
-              ]
-            }
-          }
-        ],
-        "merchantInfo" : {
-          "merchantId" : "5345087610",
-          "merchantName" : "testappflutt"
-        },
-        "transactionInfo" : {
-          "countryCode" : "US",
-          "currencyCode" : "USD"
-        }
-      }
-    }
-    ''';
+
     _payObject = ShellGooglePay(configObj);
   }
 

@@ -23,7 +23,7 @@ class BridgeManager {
       if (request.userToken != null) {
         await Backendless.userService.setUserToken(request.userToken!);
       }
-      var result;
+
       Map? customPayload = data['payload']['options'];
 
       if (request.operationName == 'ADD_LISTENER' && customPayload != null) {
