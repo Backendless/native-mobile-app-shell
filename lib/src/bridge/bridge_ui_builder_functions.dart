@@ -420,7 +420,7 @@ class BridgeUIBuilderFunctions {
 
   static Future<void> googlePayRequest(Map data) async {
     var paymentItemsMap = data['paymentItems'];
-    List<PaymentItem> paymentItemsEntity = List.of((paymentItemsMap as List).map((e) => PaymentItem(amount: e['amount'], label: e['label'])));
+    List<PaymentItem> paymentItemsEntity = List.of((paymentItemsMap as List).map((e) => PaymentItem(amount: e['amount'], label: e['label'], status: PaymentItemStatus.final_price)));
 
     if(_payObject == null) {
       throw Exception('Google Pay Service must be initialized before pay request');
