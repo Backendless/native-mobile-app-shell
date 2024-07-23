@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-
 import '../utils/coder.dart';
 
 typedef void CallbackFunction(Map data);
@@ -50,15 +48,14 @@ class BridgeEvent {
 
     if (!_eventsContainer!.containsKey(event.eventName)) {
       _eventsContainer![event.eventName] =
-          List<BridgeEvent>.of([event], growable: true);
-      return;
+          List<BridgeEvent>.empty(growable: true);
     }
 
     BridgeEvent._eventsContainer![event.eventName]!.add(event);
+    print('Event was added');
   }
 
-  static bool removeEvent(String name, String id) {
-    ///TODO
+  static Future<bool> removeEvent(String name, String id) async {
     if (_eventsContainer?.isNotEmpty ?? false) {
       if (_eventsContainer!.containsKey(name)) {
         for (var event in _eventsContainer![name]!) {
@@ -83,11 +80,12 @@ class BridgeEvent {
   }
 
   get isExist {
-    if (BridgeEvent._eventsContainer?.isNotEmpty ?? false) {
-      ///TODO
-      for (var event in _eventsContainer!['TODO']!) {
-        if (this.equalTo(event.id)) {
-          return true;
+    if (_eventsContainer?.isNotEmpty ?? false) {
+      if (_eventsContainer!.containsKey(this.eventName)) {
+        for (var event in _eventsContainer![this.eventName]!) {
+          if (this.equalTo(event.id)) {
+            return true;
+          }
         }
       }
     }

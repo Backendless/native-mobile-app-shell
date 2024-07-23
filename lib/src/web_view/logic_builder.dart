@@ -1,30 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../web_view/web_view_container.dart';
 import 'package:overlay_support/overlay_support.dart';
 
+GlobalKey<NavigatorState> navigatorKeyT = GlobalKey<NavigatorState>();
+
 class StartPageStateless extends StatelessWidget {
   //TODO Set path to your 'index.html' file!
-  final syncPath = 'assets/ui_builder_app/index.html';
+  static final syncPath = 'assets/ui_builder_app/index.html';
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-      [
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]
-    );
-
     return OverlaySupport.global(
       child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: isExists() ? WebViewContainer(syncPath) : StartPageStateful()),
+        debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKeyT,
+        home: isExists() ? WebViewContainer(syncPath) : StartPageStateful(),
+      ),
     );
-  }
-
-  bool isExists() {
-    return syncPath.contains('/index.html');
   }
 }
 
@@ -80,4 +72,8 @@ class _StartPageStatefulState extends State<StartPageStateful> {
       ),
     );
   }
+}
+
+bool isExists() {
+  return StartPageStateless.syncPath.contains('/index.html');
 }

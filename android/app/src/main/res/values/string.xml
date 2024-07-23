@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Native App Shell</string>
+    <string name="facebook_app_id">xxx</string>
+    <string name="fb_login_protocol_scheme">fbxxx</string>
+    <string name="facebook_client_token">YOUR_CLIENT_TOKEN</string>
+</resources>
