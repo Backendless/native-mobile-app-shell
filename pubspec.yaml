@@ -1,4 +1,4 @@
-name: native_app_shell_mobile
+name: SistersCoffeeCompany
 description: Native App Shell for UI Builder applications
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -6,32 +6,24 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=2.15.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
   permission_handler: ^8.1.6
-  flutter_inappwebview: ^5.8.0
+  flutter_inappwebview: ^5.6.0+2
   url_launcher: ^6.0.10
-  backendless_sdk: ^8.0.0-alpha.27
+  backendless_sdk: ^7.3.1
   overlay_support: ^2.0.1
-  audioplayers: ^5.1.0
+  audioplayers: ^0.20.1
   geolocator: ^8.0.5
   sign_in_with_apple: ^3.3.0
-  google_sign_in: ^5.4.1
-  flutter_facebook_auth: ^5.0.7
-  uni_links: ^0.5.1
-  path_provider: ^2.0.12
-  package_info_plus: ^3.0.2
-  share_plus: 7.0.2
-  flutter_contacts: ^1.1.7+1
-  syncfusion_flutter_pdfviewer: ^21.2.3
-  firebase_core: ^2.7.0
-  firebase_messaging: ^14.7.10
-  sensors_plus: ^4.0.2
-  pay: ^2.0.0
+  square_in_app_payments:
+    git:
+      url: https://github.com/square/in-app-payments-flutter-plugin
+      ref: 619d83bf9cb6d560d44829971192c9a0b82ec84f
 
 dev_dependencies:
   flutter_test:
@@ -45,10 +37,112 @@ flutter:
     - assets/ui_builder_app/
     - assets/ui_builder_app/library/sdk/
     - assets/ui_builder_app/libs/less/
-    - assets/ui_builder_app/libs/material-ui-icons/
     - assets/ui_builder_app/libs/require/
+    - assets/ui_builder_app/libs/material-ui-icons/
     - assets/ui_builder_app/library/sdk/modules/
 
   fonts:
     - family: CustomAssets
       fonts:
+        - asset: assets/ui_builder_app/styles/assets/img/no-img.png
+        - asset: assets/ui_builder_app/styles/assets/img/bg/bg-card.png
+        - asset: assets/ui_builder_app/styles/assets/img/bg/bg.png
+        - asset: assets/ui_builder_app/styles/assets/img/bg/card-chip.svg
+        - asset: assets/ui_builder_app/styles/assets/img/bg/guest-bg.png
+        - asset: assets/ui_builder_app/styles/assets/img/card_logo/am_ex.png
+        - asset: assets/ui_builder_app/styles/assets/img/card_logo/Apple_Pay_logo.svg
+        - asset: assets/ui_builder_app/styles/assets/img/card_logo/DinersClub.png
+        - asset: assets/ui_builder_app/styles/assets/img/card_logo/discover.png
+        - asset: assets/ui_builder_app/styles/assets/img/card_logo/google-pay-logo.svg
+        - asset: assets/ui_builder_app/styles/assets/img/card_logo/mc.svg
+        - asset: assets/ui_builder_app/styles/assets/img/card_logo/UnionPay.svg
+        - asset: assets/ui_builder_app/styles/assets/img/card_logo/visa-w.png
+        - asset: assets/ui_builder_app/styles/assets/img/card_logo/visa.png
+        - asset: assets/ui_builder_app/styles/assets/img/icons/about.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/about-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/add-light.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/add.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/affirmative.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/card-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/card.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/card-s.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/cart.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/cart-w.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/chevron-right.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/clock.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/clock-w.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/coffee.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/coffee-w.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/date.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/delete.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/employment.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/employment-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/flag-w.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/flag.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/google.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/heart.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/heart-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/home.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/left.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/list.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/location-select.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/location-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/location.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/login.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/logout.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/logout-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/mail.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/mail-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/map.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/map_pin.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/name.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/negative.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/notes.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/phone.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/pin.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/privacy.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/privacy-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/profile.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/qr.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/remove.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/restaurant.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/restaurant-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/search-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/search.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/star.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/star-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/telephone.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/telephone-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/terms.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/terms-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/travel-map.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/travel-map-w.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/wallet.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/wallet-g.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/warning.svg
+        - asset: assets/ui_builder_app/styles/assets/img/icons/web.svg
+        - asset: assets/ui_builder_app/styles/assets/img/logo/logo.svg
+        - asset: assets/ui_builder_app/styles/assets/img/logo/logo.png
+        - asset: assets/ui_builder_app/styles/assets/fonts/Inter-Black.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/Inter-Bold.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/Inter-ExtraBold.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/Inter-ExtraLight.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/Inter-Light.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/Inter-Medium.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/Inter-Regular.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/Inter-SemiBold.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/Inter-Thin.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-Bold.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-BoldItalic.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-ExtraBold.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-ExtraBoldItalic.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-ExtraLight.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-ExtraLightItalic.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-Italic.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-LightItalic.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-Medium.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-MediumItalic.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-Regular.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-SemiBold.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-SemiBoldItalic.ttf
+        - asset: assets/ui_builder_app/styles/assets/fonts/PlusJakartaSans-Light.ttf

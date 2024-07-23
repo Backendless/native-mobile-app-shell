@@ -1,4 +1,4 @@
-package com.backendless.native_app_shell
+package com.shopconnex.sisterscoffee
 
 import io.flutter.embedding.android.FlutterActivity
 

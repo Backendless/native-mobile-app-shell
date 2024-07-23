@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import '../types/system_events.dart';
 import 'package:flutter/services.dart';
 
@@ -18,6 +19,7 @@ class Coder {
     if (object is DateTime) {
       return object.toIso8601String();
     }
+
     return object;
   }
 }

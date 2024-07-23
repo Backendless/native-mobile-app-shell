@@ -1,22 +1,38 @@
 {
   "project_info": {
-    "project_number": "559083352946",
-    "project_id": "native-app-shell",
-    "storage_bucket": "native-app-shell.appspot.com"
+    "project_number": "74796089825",
+    "project_id": "sisters-coffee-company",
+    "storage_bucket": "sisters-coffee-company.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "empty_value",
+        "mobilesdk_app_id": "1:74796089825:android:97255a0a4e375b473892a0",
         "android_client_info": {
-          "package_name": "com.backendless.native_app_shell"
+          "package_name": "com.shopconnex.sisterscoffee"
         }
       },
+      "oauth_client": [
+        {
+          "client_id": "74796089825-i6r07m7k8ub5ts4nrkfdart05f9jnl35.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "empty_value"
+          "current_key": "AIzaSyDQi-RwUEX8mhlAMHmD2p15ZO7N4dWCXzo"
         }
-      ]
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74796089825-i6r07m7k8ub5ts4nrkfdart05f9jnl35.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
