@@ -19,7 +19,6 @@ import '../utils/geo_controller.dart';
 import 'package:flutter/material.dart';
 import '../utils/support_functions.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:audioplayers/audioplayers.dart';
 import '../types/push_notification_message.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -36,13 +35,13 @@ class BridgeUIBuilderFunctions {
   static const GOOGLE_CLIENT_ID_WEB = 'xxxxxx.apps.googleusercontent.com';
 
   static StreamController<bool> onTapEventInitializeController =
-      StreamController.broadcast();
+  StreamController.broadcast();
   static late LocationPermission permission;
   static PackageInfo? info;
   static var _payObject;
 
-  static Future<BridgeEvent> createBridgeEventFromMap(
-      Map? data, JavaScriptReplyProxy replier) async {
+  static Future<BridgeEvent> createBridgeEventFromMap(Map? data,
+      PlatformJavaScriptReplyProxy replier) async {
     String eventName = data!['event'];
     String eventId = data['id'];
 
@@ -55,8 +54,8 @@ class BridgeUIBuilderFunctions {
     return event;
   }
 
-  static Future<void> addListener(
-      Map? mapEvent, JavaScriptReplyProxy jsResponseProxy) async {
+  static Future<void> addListener(Map? mapEvent,
+      PlatformJavaScriptReplyProxy jsResponseProxy) async {
     BridgeEvent event = await BridgeUIBuilderFunctions.createBridgeEventFromMap(
         mapEvent!, jsResponseProxy);
 
@@ -85,8 +84,8 @@ class BridgeUIBuilderFunctions {
         channels: targetChannels);
   }
 
-  static Future<void> tapOnPushAction(
-      Map? data, JavaScriptReplyProxy jsResponseProxy) async {
+  static Future<void> tapOnPushAction(Map? data,
+      PlatformJavaScriptReplyProxy jsResponseProxy) async {
     await BridgeUIBuilderFunctions.addListener(data!, jsResponseProxy);
 
     if (!onTapEventInitializeController.isClosed) {
@@ -165,8 +164,8 @@ class BridgeUIBuilderFunctions {
     return result;
   }
 
-  static Future<BackendlessUser?> _socialLogin(
-      String providerCode, BuildContext context,
+  static Future<BackendlessUser?> _socialLogin(String providerCode,
+      BuildContext context,
       {Map<String, String>? fieldsMappings, List<String>? scope}) async {
     BackendlessUser? user;
     String? userId;
@@ -179,7 +178,7 @@ class BridgeUIBuilderFunctions {
       if (providerCode == 'googleplus') {
         GoogleSignIn _googleSignIn = GoogleSignIn(
           clientId:
-              io.Platform.isIOS ? GOOGLE_CLIENT_ID_IOS : GOOGLE_CLIENT_ID_WEB,
+          io.Platform.isIOS ? GOOGLE_CLIENT_ID_IOS : GOOGLE_CLIENT_ID_WEB,
           scopes: [
             'email',
             'https://www.googleapis.com/auth/plus.login',
@@ -195,7 +194,7 @@ class BridgeUIBuilderFunctions {
         await FacebookAuth.instance.logOut();
         final LoginResult fbResult = await FacebookAuth.instance.login();
         if (fbResult.status == LoginStatus.success) {
-          token = fbResult.accessToken!.token;
+          token = fbResult.accessToken!.tokenString;
         } else {
           print(fbResult.status);
           print(fbResult.message);
@@ -222,28 +221,30 @@ class BridgeUIBuilderFunctions {
           context: context,
           builder: (context) {
             return Container(
-              width: MediaQuery.of(context).size.width * 1.2,
-              height: MediaQuery.of(context).size.height,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 1.2,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height,
               child: Column(
                 children: [
                   Expanded(
                       child: InAppWebView(
                           initialUrlRequest: URLRequest(
-                            url: Uri.parse(result!),
+                            url: WebUri(result!),
                           ),
-                          initialOptions: InAppWebViewGroupOptions(
-                            crossPlatform: InAppWebViewOptions(
-                                useShouldOverrideUrlLoading: true,
-                                disableHorizontalScroll: true,
-                                cacheEnabled: true,
-                                userAgent:
-                                    'Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Mobile/15E148 Safari/604.1'
-                                //providerCode != 'facebook' ? 'random' : '',
-                                ),
-                            android: AndroidInAppWebViewOptions(
-                              useHybridComposition: true,
-                              safeBrowsingEnabled: false,
-                            ),
+                          initialSettings: InAppWebViewSettings(
+                            useShouldOverrideUrlLoading: true,
+                            disableHorizontalScroll: true,
+                            cacheEnabled: true,
+                            userAgent:
+                            'Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Mobile/15E148 Safari/604.1',
+                            //providerCode != 'facebook' ? 'random' : '',
+                            useHybridComposition: true,
+                            safeBrowsingEnabled: false,
                           ),
                           onLoadStop: (controller, url) async {
                             print('!!! called onLoadStop');
@@ -271,7 +272,8 @@ class BridgeUIBuilderFunctions {
     }
 
     if (userId != null && user == null) {
-      user = BackendlessUser()..setProperty('objectId', userId);
+      user = BackendlessUser()
+        ..setProperty('objectId', userId);
 
       await Backendless.userService.setCurrentUser(user);
       await Backendless.userService.setUserToken(userToken!);
@@ -343,7 +345,7 @@ class BridgeUIBuilderFunctions {
 
   static Future<Contact> createContact(Map contactData) async {
     Map<String, dynamic> parsedContactData =
-        await ContactsController.normalizeContact(contactData['contact']);
+    await ContactsController.normalizeContact(contactData['contact']);
 
     Contact contact = Contact(
       displayName: parsedContactData['displayName'],
@@ -407,35 +409,43 @@ class BridgeUIBuilderFunctions {
 
   static Future<void> googlePayInit(Map data) async {
     var configurationJson = data['configuration'];
-    PaymentConfiguration configObj = PaymentConfiguration.fromJsonString(configurationJson);
+    PaymentConfiguration configObj = PaymentConfiguration.fromJsonString(
+        configurationJson);
 
     _payObject = ShellGooglePay(configObj);
   }
 
   static Future<void> applePayInit(Map data) async {
     var configurationJson = data['configuration'];
-    PaymentConfiguration configObj = PaymentConfiguration.fromJsonString(configurationJson);
+    PaymentConfiguration configObj = PaymentConfiguration.fromJsonString(
+        configurationJson);
     _payObject = ShellApplePay(configObj);
   }
 
   static Future<void> googlePayRequest(Map data) async {
     var paymentItemsMap = data['paymentItems'];
-    List<PaymentItem> paymentItemsEntity = List.of((paymentItemsMap as List).map((e) => PaymentItem(amount: e['amount'], label: e['label'], status: PaymentItemStatus.final_price)));
+    List<PaymentItem> paymentItemsEntity = List.of(
+        (paymentItemsMap as List).map((e) =>
+            PaymentItem(amount: e['amount'],
+                label: e['label'],
+                status: PaymentItemStatus.final_price)));
 
-    if(_payObject == null) {
-      throw Exception('Google Pay Service must be initialized before pay request');
+    if (_payObject == null) {
+      throw Exception(
+          'Google Pay Service must be initialized before pay request');
     }
 
     bool canPay = await (_payObject as ShellGooglePay).userCanPay();
 
-    if(canPay) {
+    if (canPay) {
       try {
         var res = await (_payObject as ShellGooglePay).pay(paymentItemsEntity);
         print(res);
-      } catch(ex) {
-        if(ex is PlatformException) {
-          if(ex.code == '10') {
-            throw Exception("This merchant is currently unable to accept payments using this payment method. Try a different payment method.");
+      } catch (ex) {
+        if (ex is PlatformException) {
+          if (ex.code == '10') {
+            throw Exception(
+                "This merchant is currently unable to accept payments using this payment method. Try a different payment method.");
           }
         } else {
           print(ex);
@@ -448,15 +458,18 @@ class BridgeUIBuilderFunctions {
 
   static Future<void> applePayRequest(Map data) async {
     var paymentItemsMap = data['paymentItems'];
-    List<PaymentItem> paymentItemsEntity = List.of((paymentItemsMap as List).map((e) => PaymentItem(amount: e['amount'], label: e['label'])));
+    List<PaymentItem> paymentItemsEntity = List.of(
+        (paymentItemsMap as List).map((e) =>
+            PaymentItem(amount: e['amount'], label: e['label'])));
 
-    if(_payObject == null) {
-      throw Exception('Apple Pay Service must be initialized before pay request');
+    if (_payObject == null) {
+      throw Exception(
+          'Apple Pay Service must be initialized before pay request');
     }
 
     bool canPay = await (_payObject as ShellApplePay).userCanPay();
 
-    if(canPay) {
+    if (canPay) {
       var res = await (_payObject as ShellApplePay).pay(paymentItemsEntity);
       print(res);
     } else {
@@ -464,10 +477,10 @@ class BridgeUIBuilderFunctions {
     }
   }
 
-  static Future<void> setAccelerometerEvent(
-      Map data, JavaScriptReplyProxy jsResponseProxy) async {
+  static Future<void> setAccelerometerEvent(Map data,
+      PlatformJavaScriptReplyProxy jsResponseProxy) async {
     BridgeEvent bridgeEvent =
-        await createBridgeEventFromMap(data, jsResponseProxy);
+    await createBridgeEventFromMap(data, jsResponseProxy);
     await addListener(data, jsResponseProxy);
 
     accelerometerEventStream(samplingPeriod: SensorInterval.normalInterval)
@@ -479,10 +492,10 @@ class BridgeUIBuilderFunctions {
     });
   }
 
-  static Future<void> setMagnetometerEvent(
-      Map data, JavaScriptReplyProxy jsResponseProxy) async {
+  static Future<void> setMagnetometerEvent(Map data,
+      PlatformJavaScriptReplyProxy jsResponseProxy) async {
     BridgeEvent bridgeEvent =
-        await createBridgeEventFromMap(data, jsResponseProxy);
+    await createBridgeEventFromMap(data, jsResponseProxy);
     await addListener(data, jsResponseProxy);
 
     magnetometerEventStream(samplingPeriod: SensorInterval.normalInterval)
@@ -494,25 +507,25 @@ class BridgeUIBuilderFunctions {
     });
   }
 
-  static Future<void> setGyroscopeEvent(
-      Map data, JavaScriptReplyProxy jsResponseProxy) async {
+  static Future<void> setGyroscopeEvent(Map data,
+      PlatformJavaScriptReplyProxy jsResponseProxy) async {
     BridgeEvent bridgeEvent =
-        await createBridgeEventFromMap(data, jsResponseProxy);
+    await createBridgeEventFromMap(data, jsResponseProxy);
     await addListener(data, jsResponseProxy);
 
     gyroscopeEventStream(samplingPeriod: SensorInterval.normalInterval).listen(
-        (event) async {
-      await BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
-          {'x': '${event.x}', 'y': '${event.y}', 'z': '${event.z}'});
-    }, onError: (error) {
+            (event) async {
+          await BridgeEvent.dispatchEventsByName(bridgeEvent.eventName,
+              {'x': '${event.x}', 'y': '${event.y}', 'z': '${event.z}'});
+        }, onError: (error) {
       print('Error in \'gyroscope event\' has appeared');
     });
   }
 
-  static Future<void> setUserAccelerometerEvent(
-      Map data, JavaScriptReplyProxy jsResponseProxy) async {
+  static Future<void> setUserAccelerometerEvent(Map data,
+      PlatformJavaScriptReplyProxy jsResponseProxy) async {
     BridgeEvent bridgeEvent =
-        await createBridgeEventFromMap(data, jsResponseProxy);
+    await createBridgeEventFromMap(data, jsResponseProxy);
     await addListener(data, jsResponseProxy);
 
     userAccelerometerEventStream(samplingPeriod: SensorInterval.normalInterval)
@@ -525,8 +538,6 @@ class BridgeUIBuilderFunctions {
   }
 
   static Future<void> onMessage(Map message) async {
-    final pushSound = AudioPlayer();
-    pushSound.play(AssetSource('notification_sounds/push_sound.wav'));
     PushNotificationMessage notification = PushNotificationMessage();
 
     if (io.Platform.isIOS) {
