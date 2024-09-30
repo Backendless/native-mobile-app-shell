@@ -1,7 +1,7 @@
 import UIKit
 import Flutter
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
     private var controller : FlutterViewController?
     private var pushChannel: FlutterMethodChannel?
