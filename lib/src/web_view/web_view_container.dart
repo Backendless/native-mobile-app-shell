@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'dart:io' as io;
+import 'package:app_links/app_links.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-import '../utils/support_functions.dart';
 import '../web_view/build_child_web_view.dart';
-import 'package:uni_links/uni_links.dart';
-import '../bridge/bridge_event.dart';
 import '../utils/geo_controller.dart';
 import '../utils/initializer.dart';
 import '/configurator.dart';
@@ -33,47 +30,42 @@ class _WebViewContainerState extends State<WebViewContainer> {
   String? initLink;
 
   InAppWebViewController? webViewController;
-  InAppWebViewGroupOptions? options;
+  InAppWebViewSettings? options;
   Bridge? manager;
   _WebViewContainerState(this.syncPath);
 
   @override
   void initState() {
     super.initState();
-    options = InAppWebViewGroupOptions(
-      crossPlatform: InAppWebViewOptions(
-        allowUniversalAccessFromFileURLs: true,
-        allowFileAccessFromFileURLs: true,
-        useShouldOverrideUrlLoading: true,
-        mediaPlaybackRequiresUserGesture: false,
-        javaScriptCanOpenWindowsAutomatically: true,
-        javaScriptEnabled: true,
-        preferredContentMode: UserPreferredContentMode.MOBILE,
-        useOnLoadResource: true,
-        useOnDownloadStart: true,
-      ),
-      android: AndroidInAppWebViewOptions(
-        mixedContentMode: AndroidMixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
-        useHybridComposition: true,
-        allowFileAccess: true,
-        allowContentAccess: true,
-        geolocationEnabled: true,
-      ),
-      ios: IOSInAppWebViewOptions(
-        allowsInlineMediaPlayback: true,
-        allowsPictureInPictureMediaPlayback: true,
-        isPagingEnabled: true,
-        disallowOverScroll: true,
-      ),
+    options = InAppWebViewSettings(
+      allowUniversalAccessFromFileURLs: true,
+      allowFileAccessFromFileURLs: true,
+      useShouldOverrideUrlLoading: true,
+      mediaPlaybackRequiresUserGesture: false,
+      javaScriptCanOpenWindowsAutomatically: true,
+      javaScriptEnabled: true,
+      preferredContentMode: UserPreferredContentMode.MOBILE,
+      useOnLoadResource: true,
+      useOnDownloadStart: true,
+      mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+      useHybridComposition: true,
+      allowFileAccess: true,
+      allowContentAccess: true,
+      geolocationEnabled: true,
+      allowsInlineMediaPlayback: true,
+      allowsPictureInPictureMediaPlayback: true,
+      isPagingEnabled: true,
+      disallowOverScroll: true,
     );
     _configureWebView();
     initLinkURL();
   }
 
   Future<void> initLinkURL() async {
-    initLink = await getInitialLink();
+    final appLink = AppLinks();
+    initLink = await appLink.getInitialLinkString();
 
-    linkStream.listen((link) {
+    appLink.stringLinkStream.listen((link) {
       _openSpecificPage(fullLink: link);
     });
   }
@@ -98,7 +90,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
         resultQuery = fullLink!.substring(fullLink.indexOf('?'));
       }
 
-      URLRequest urlRequest = URLRequest(url: Uri.parse(url + resultQuery));
+      URLRequest urlRequest = URLRequest(url: WebUri(url + resultQuery));
       await webViewController!.loadUrl(urlRequest: urlRequest);
     }
   }
@@ -112,7 +104,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
           onWillPop: () => _exitApp(context),
           child: InAppWebView(
             key: _key,
-            initialOptions: options,
+            initialSettings: options,
             onWebViewCreated: (InAppWebViewController controller) async {
               webViewController = controller;
               manager = Bridge(controller: webViewController!);
@@ -125,13 +117,11 @@ class _WebViewContainerState extends State<WebViewContainer> {
                 initLink = null;
               }
             },
-            androidOnPermissionRequest: (InAppWebViewController controller,
-                String origin, List<String> resources) async {
-              return PermissionRequestResponse(
-                  resources: resources,
-                  action: PermissionRequestResponseAction.GRANT);
+            onPermissionRequest: (InAppWebViewController controller, PermissionRequest request) async {
+              return PermissionResponse(
+                  action: PermissionResponseAction.GRANT);
             },
-            androidOnGeolocationPermissionsShowPrompt:
+            onGeolocationPermissionsShowPrompt:
                 (InAppWebViewController controller, String origin) async {
               await requestPermission();
               bool? result = await showDialog<bool>(
@@ -204,10 +194,10 @@ class _WebViewContainerState extends State<WebViewContainer> {
               return true;
             },
             onLoadStart: (InAppWebViewController controller, url) {},
-            onLoadError: (controller, url, code, message) {
-              print('code: $code\n'
+            onReceivedError: (controller, url, error) {
+              print('code: ${error.type.toValue()}\n'
                   'url: $url\n'
-                  'message: $message');
+                  'message: ${error.description}');
               showDialog<String>(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
@@ -226,7 +216,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              code.toString(),
+                              error.type.toValue(),
                             ),
                           ],
                         ),
@@ -237,7 +227,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              message,
+                              error.description,
                               maxLines: 10,
                               softWrap: true,
                             ),
@@ -263,10 +253,10 @@ class _WebViewContainerState extends State<WebViewContainer> {
                 ),
               );
             },
-            onLoadHttpError: (controller, url, code, message) {
-              print('code: $code\n'
+            onReceivedHttpError: (controller, url, error) {
+              print('code: ${error.statusCode}\n'
                   'url: $url\n'
-                  'message: $message');
+                  'message: ${error.reasonPhrase}');
             },
             onLoadStop: (controller, url) async {
               print('load stopped: $url');
@@ -285,9 +275,10 @@ class _WebViewContainerState extends State<WebViewContainer> {
             onProgressChanged: (controller, progress) {
               print('progress: $progress %');
             },
-            iosOnNavigationResponse: (controller, response) async {
+            onNavigationResponse: (controller, response) async {
               print(response.response);
-              return null;
+
+              return NavigationResponseAction.ALLOW;
             },
             onDownloadStartRequest: (controller, req) async {
               print('Downloading started with url: ${req.url}');
@@ -298,14 +289,16 @@ class _WebViewContainerState extends State<WebViewContainer> {
                 }
               }
             },
-            onPrint: (controller, url) {
+            onPrintRequest: (controller, url, jobController) async {
               print('onPrint event: $url');
+
+              return true;
             },
-            iosOnWebContentProcessDidTerminate: (controller) async {
+            onWebContentProcessDidTerminate: (controller) async {
               print('reload IOS');
               await controller.reload();
             },
-            androidOnRenderProcessGone: (controller, detail) async {
+            onRenderProcessGone: (controller, detail) async {
               print('reload Android');
               await controller.reload();
             },
@@ -328,8 +321,8 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
   Future setBridge(BuildContext context) async {
     if (!io.Platform.isAndroid ||
-        await AndroidWebViewFeature.isFeatureSupported(
-            AndroidWebViewFeature.WEB_MESSAGE_LISTENER)) {
+        await WebViewFeature.isFeatureSupported(
+            WebViewFeature.WEB_MESSAGE_LISTENER)) {
       await manager!.addWebMessageListener(context);
     }
 
@@ -387,8 +380,8 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
         ///TODO
         if (!io.Platform.isAndroid ||
-            await AndroidWebViewFeature.isFeatureSupported(
-                AndroidWebViewFeature.POST_WEB_MESSAGE)) {
+            await WebViewFeature.isFeatureSupported(
+                WebViewFeature.POST_WEB_MESSAGE)) {
           //BridgeEvent.dispatchEventsByName('onTapPushAction', {});
         } else {
           await BridgeUIBuilderFunctions.onTapIOS(

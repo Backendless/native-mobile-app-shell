@@ -16,14 +16,12 @@ Widget buildChildWebView(BuildContext context, String childUrl) {
     ),
     body: InAppWebView(
       initialUrlRequest: URLRequest(
-        url: Uri.parse(childUrl),
+        url: WebUri(childUrl),
       ),
-      initialOptions: InAppWebViewGroupOptions(
-        crossPlatform: InAppWebViewOptions(
-            useShouldOverrideUrlLoading: true,
-            disableHorizontalScroll: true,
-            userAgent: 'random'),
-      ),
+      initialSettings: InAppWebViewSettings(
+          useShouldOverrideUrlLoading: true,
+          disableHorizontalScroll: true,
+          userAgent: 'random'),
       onLoadStop: (controller, url) async {
         print('!!! called onLoadStop');
         print("AUTH_WEBVIEW: $url");

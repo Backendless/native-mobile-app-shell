@@ -21,8 +21,8 @@ class Bridge {
 
           String? result;
           try {
-            print('got data from codeless: $message');
-            Map data = await jsonDecode(message!);
+            print('got data from codeless: ${message!.data}');
+            Map data = await jsonDecode(message.data);
 
             var systemEvent =
                 await BridgeValidator.hasSystemEvent(data['event']);
@@ -53,7 +53,9 @@ class Bridge {
             } else if (result.contains('\"type\":\"ADD_LISTENER\"')) {}
 
             print('sent data to codeless: $result');
-            await replyProxy.postMessage(result);
+
+            WebMessage webMessage = WebMessage(data: result);
+            await replyProxy.postMessage(webMessage);
           } catch (ex) {
             throw Exception(ex);
           }

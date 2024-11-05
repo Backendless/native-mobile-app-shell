@@ -7,7 +7,7 @@ typedef void CallbackFunction(Map data);
 class BridgeEvent {
   final String id;
   final String eventName;
-  final JavaScriptReplyProxy _replier;
+  final PlatformJavaScriptReplyProxy _replier;
   late CallbackFunction? dispatch;
   static Map<String, List<BridgeEvent>>? _eventsContainer;
 
@@ -107,6 +107,7 @@ class BridgeEvent {
       toEncodable: Coder.dateSerializer,
     );
 
-    await this._replier.postMessage(result);
+    WebMessage webMessage = WebMessage(data: result);
+    await this._replier.postMessage(webMessage);
   }
 }

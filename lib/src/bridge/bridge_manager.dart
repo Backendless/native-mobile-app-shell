@@ -14,7 +14,7 @@ class BridgeManager {
   static PackageInfo? info;
 
   static Future<String> executeRequest(
-      Map data, JavaScriptReplyProxy jsResponseProxy) async {
+      Map data, PlatformJavaScriptReplyProxy jsResponseProxy) async {
     final request = Request(data['payload']['id'], data['payload']['type']);
 
     request.userToken = data['payload']['userToken'];
